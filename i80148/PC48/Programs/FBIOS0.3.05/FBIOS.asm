@@ -612,6 +612,10 @@ wr_disk_success:
 
 setup_utility:
 	; Clean screen
+	STR.dw R0, [0x00040000]
+	STR.dw R0, [0x00040004]
+	STR.dw R0, [0x00040008]
+	
 	LDI.b XL1, 0x01
 	STR.b XL1, [0x00020019]
 	LDI.b XL1, 0x03
