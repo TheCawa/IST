@@ -677,298 +677,382 @@ class Assembler:
                     self.append_code((val >> 8) & 0xFF)
                     self.append_code(val & 0xFF)
 
+    def process_first_pass_line(self, line):
+        line = line.split(';')[0].strip()
+        if not line: return
+
+        match = re.match(r'^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)', line)
+        if match:
+            label = match.group(1)
+            self.labels[label.upper()] = self.cur_addr()
+            self.symbols[label.upper()] = {
+                'section': self.active_seg,
+                'offset': self.symbol_offsets[self.active_seg],
+                'global': False
+            }
+            line = match.group(2).strip()
+            if not line: return
+
+        # ALIGN
+        align_match = re.match(r'^(?:\.ALIGN|ALIGN)\s+(.*)', line, re.IGNORECASE)
+        if align_match:
+            boundary = self.parse_operand(align_match.group(1).strip())
+            if boundary > 0:
+                current = self.cur_addr()
+                remainder = current % boundary
+                if remainder != 0:
+                    padding = boundary - remainder
+                    self.add_addr(padding)
+            return
+
+        # TIMES
+        times_match = re.match(r'^(?:\.TIMES|TIMES)\s+(.*?)\s+(.*)', line, re.IGNORECASE)
+        if times_match:
+            count_str = times_match.group(1).strip()
+            rest_line = times_match.group(2).strip()
+            try:
+                count = self.parse_operand(count_str)
+            except:
+                count = 0
+            for _ in range(count):
+                self.process_first_pass_line(rest_line)
+            return
+
+        up = line.upper()
+        if up == '.TEXT':
+            self.active_seg = 'text'
+            return
+        elif up == '.DATA':
+            self.active_seg = 'data'
+            return
+        elif up == '.BSS':
+            self.active_seg = 'bss'
+            return
+
+        mnem_match = re.match(r'^([a-zA-Z_][a-zA-Z0-9_\.]*|\.[a-zA-Z]+)\s+(.*)', line)
+        if mnem_match:
+            mnemonic = mnem_match.group(1).upper()
+            rest = mnem_match.group(2)
+            operands = self.parse_operands(rest)
+        else:
+            mnemonic = line.upper()
+            operands = []
+
+        if mnemonic == '.ORG':
+            self.set_addr(self.parse_number(operands[0]) if operands else self.parse_number(line.split()[1]))
+            return
+        elif mnemonic == '.ENTRY':
+            self.entry = operands[0].upper() if operands else line.split()[1].upper()
+            return
+        elif mnemonic == '.GLOBAL':
+            name = operands[0].upper() if operands else line.split()[1].upper()
+            self.globals.add(name)
+            return
+        elif mnemonic == '.EXTERN':
+            name = operands[0].upper() if operands else line.split()[1].upper()
+            self.externs.add(name)
+            return
+        elif mnemonic == '.DB':
+            self.add_addr(self.calc_data_size(line[3:].strip(), 1))
+            return
+        elif mnemonic == '.DW':
+            self.add_addr(self.calc_data_size(line[3:].strip(), 2))
+            return
+        elif mnemonic == '.DD':
+            self.add_addr(self.calc_data_size(line[3:].strip(), 4))
+            return
+        elif mnemonic in ('.RESB', 'RESB'):
+            size = self.parse_operand(operands[0]) if operands else 1
+            self.add_addr(size)
+            return
+        elif mnemonic in ('.RESW', 'RESW'):
+            size = self.parse_operand(operands[0]) if operands else 1
+            self.add_addr(size * 2)
+            return
+        elif mnemonic in ('.RESD', 'RESD'):
+            size = self.parse_operand(operands[0]) if operands else 1
+            self.add_addr(size * 4)
+            return
+
+        base_mnem = mnemonic.split('.')[0]
+        if base_mnem in ['JMP', 'JMPR', 'JMA'] and mnemonic != base_mnem:
+            mnemonic = base_mnem
+
+        self.add_addr(self.get_instr_len(mnemonic, operands))
+
     def first_pass(self, lines):
         for line in lines:
-            line = line.split(';')[0].strip()
-            if not line: continue
+            self.process_first_pass_line(line)
 
-            match = re.match(r'^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)', line)
-            if match:
-                label = match.group(1)
-                self.labels[label.upper()] = self.cur_addr()
-                self.symbols[label.upper()] = {
-                    'section': self.active_seg,
-                    'offset': self.symbol_offsets[self.active_seg],
-                    'global': False
-                }
-                line = match.group(2).strip()
-                if not line: continue
+    def process_second_pass_line(self, line):
+        line = line.split(';')[0].strip()
+        if not line: return
 
-            up = line.upper()
-            if up == '.TEXT':
-                self.active_seg = 'text'
-                continue
-            elif up == '.DATA':
-                self.active_seg = 'data'
-                continue
-            elif up == '.BSS':
-                self.active_seg = 'bss'
-                continue
+        match = re.match(r'^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)', line)
+        if match:
+            line = match.group(2).strip()
+            if not line: return
 
-            mnem_match = re.match(r'^([a-zA-Z_][a-zA-Z0-9_\.]*|\.[a-zA-Z]+)\s+(.*)', line)
-            if mnem_match:
-                mnemonic = mnem_match.group(1).upper()
-                rest = mnem_match.group(2)
-                operands = self.parse_operands(rest)
+        # ALIGN
+        align_match = re.match(r'^(?:\.ALIGN|ALIGN)\s+(.*)', line, re.IGNORECASE)
+        if align_match:
+            boundary = self.parse_operand(align_match.group(1).strip())
+            if boundary > 0:
+                current = self.cur_addr()
+                remainder = current % boundary
+                if remainder != 0:
+                    padding = boundary - remainder
+                    self.segments[self.active_seg].extend([0] * padding)
+                    self.add_addr(padding)
+            return
+
+        # TIMES
+        times_match = re.match(r'^(?:\.TIMES|TIMES)\s+(.*?)\s+(.*)', line, re.IGNORECASE)
+        if times_match:
+            count_str = times_match.group(1).strip()
+            rest_line = times_match.group(2).strip()
+            try:
+                count = self.parse_operand(count_str)
+            except:
+                count = 0
+            for _ in range(count):
+                self.process_second_pass_line(rest_line)
+            return
+
+        up = line.upper()
+        if up == '.TEXT':
+            self.active_seg = 'text'
+            return
+        elif up == '.DATA':
+            self.active_seg = 'data'
+            return
+        elif up == '.BSS':
+            self.active_seg = 'bss'
+            return
+
+        mnem_match = re.match(r'^([a-zA-Z_][a-zA-Z0-9_\.]*|\.[a-zA-Z]+)\s+(.*)', line)
+        if mnem_match:
+            mnemonic = mnem_match.group(1).upper()
+            rest = mnem_match.group(2)
+            operands = self.parse_operands(rest)
+        else:
+            mnemonic = line.upper()
+            operands = []
+
+        if mnemonic == '.ORG':
+            self.set_addr(self.parse_number(operands[0]) if operands else self.parse_number(line.split()[1]))
+            return
+        elif mnemonic in ['.ENTRY', '.GLOBAL', '.EXTERN']:
+            return
+        elif mnemonic == '.DB':
+            raw_data = line[3:].strip()
+            self.emit_data(raw_data, 1)
+            self.add_addr(self.calc_data_size(raw_data, 1))
+            return
+        elif mnemonic == '.DW':
+            raw_data = line[3:].strip()
+            self.emit_data(raw_data, 2)
+            self.add_addr(self.calc_data_size(raw_data, 2))
+            return
+        elif mnemonic == '.DD':
+            raw_data = line[3:].strip()
+            self.emit_data(raw_data, 4)
+            self.add_addr(self.calc_data_size(raw_data, 4))
+            return
+        elif mnemonic in ('.RESB', 'RESB'):
+            size = self.parse_operand(operands[0]) if operands else 1
+            self.segments[self.active_seg].extend([0] * size)
+            self.add_addr(size)
+            return
+        elif mnemonic in ('.RESW', 'RESW'):
+            size = self.parse_operand(operands[0]) if operands else 1
+            self.segments[self.active_seg].extend([0] * (size * 2))
+            self.add_addr(size * 2)
+            return
+        elif mnemonic in ('.RESD', 'RESD'):
+            size = self.parse_operand(operands[0]) if operands else 1
+            self.segments[self.active_seg].extend([0] * (size * 4))
+            self.add_addr(size * 4)
+            return
+
+        base_mnem = mnemonic.split('.')[0]
+        cond = None
+        if base_mnem in ['JMP', 'JMPR', 'JMA'] and mnemonic != base_mnem:
+            cond_str = mnemonic.split('.', 1)[1]
+            cond = CONDS.get(cond_str.upper(), 0x00)
+            mnemonic = base_mnem
+
+        if mnemonic not in OPCODES:
+            print(f"Unknown instruction: {mnemonic}")
+            return
+
+        info = OPCODES[mnemonic]
+        self.append_code(info['op'])
+        if info['sf'] is not None:
+            self.append_code(info['sf'])
+
+        t = info['type']
+        instr_len = 0
+
+        if t == 'S0':
+            instr_len = 1
+        elif t == 'S1':
+            self.append_code(REGISTERS[operands[0].upper()])
+            instr_len = 2
+        elif t == 'S2':
+            self.append_code(REGISTERS[operands[0].upper()])
+            instr_len = 2
+        elif t == 'S3':
+            self.append_code(REGISTERS[operands[0].upper()])
+            instr_len = 2
+        elif t == 'S4':
+            self.append_code(self.parse_operand(operands[0]) & 0xFF)
+            instr_len = 2
+        elif t == 'S6':
+            op_str = operands[0].strip().rstrip(',')
+            if self.object_mode and self.is_symbol_ref(op_str):
+                imm_offset = self.section_offsets[self.active_seg] + 1
+                emit_imm(self.segments[self.active_seg], 0, 32)
+                if mnemonic == 'CALL':
+                    pc_after = self.section_offsets[self.active_seg] + 5
+                    self.add_relocation(self.active_seg, imm_offset, 'rel32', op_str, pc_after)
+                else:
+                    self.add_relocation(self.active_seg, imm_offset, 'abs32', op_str)
             else:
-                mnemonic = line.upper()
-                operands = []
+                if self.object_mode and self.looks_like_symbol(op_str):
+                    raise ValueError(f"Undefined symbol: {op_str}")
+                target_addr = self.parse_operand(op_str)
+                if mnemonic == 'CALL':
+                    ic_after = self.cur_addr() + 5
+                    val = target_addr - ic_after
+                else:
+                    val = target_addr
+                emit_imm(self.segments[self.active_seg], val, 32)
+            instr_len = 5
+        elif t == 'H0':
+            self.append_code(REGISTERS[operands[0].upper()])
+            self.append_code(self.parse_operand(operands[1]) & 0xFF)
+            instr_len = 3
+        elif t == 'A0':
+            self.append_code(REGISTERS[operands[0].upper()])
+            self.append_code(REGISTERS[operands[1].upper()])
+            instr_len = 4
+        elif t == 'A1':
+            self.append_code(REGISTERS[operands[0].upper()])
+            emit_imm(self.segments[self.active_seg], self.parse_operand(operands[1]), 8)
+            instr_len = 4
+        elif t == 'A2':
+            self.append_code(REGISTERS[operands[0].upper()])
+            emit_imm(self.segments[self.active_seg], self.parse_operand(operands[1]), 16)
+            instr_len = 5
+        elif t == 'A3':
+            self.append_code(REGISTERS[operands[0].upper()])
+            op_str = operands[1].strip().rstrip(',')
+            if self.object_mode and self.is_symbol_ref(op_str):
+                imm_offset = self.section_offsets[self.active_seg] + 3
+                emit_imm(self.segments[self.active_seg], 0, 32)
+                self.add_relocation(self.active_seg, imm_offset, 'abs32', op_str)
+            else:
+                if self.object_mode and self.looks_like_symbol(op_str):
+                    raise ValueError(f"Undefined symbol: {op_str}")
+                emit_imm(self.segments[self.active_seg], self.parse_operand(op_str), 32)
+            instr_len = 7
+        elif t == 'D0':
+            self.append_code(REGISTERS[operands[0].upper()])
+            self.append_code(REGISTERS[operands[1].upper()])
+            instr_len = 4
+        elif t == 'D1B':
+            self.append_code(REGISTERS[operands[0].upper()])
+            emit_imm(self.segments[self.active_seg], self.parse_operand(operands[1]), 8)
+            instr_len = 4
+        elif t == 'D1W':
+            self.append_code(REGISTERS[operands[0].upper()])
+            emit_imm(self.segments[self.active_seg], self.parse_operand(operands[1]), 16)
+            instr_len = 5
+        elif t == 'D1DW':
+            self.append_code(REGISTERS[operands[0].upper()])
+            op_str = operands[1].strip().rstrip(',')
+            if self.object_mode and self.is_symbol_ref(op_str):
+                imm_offset = self.section_offsets[self.active_seg] + 3
+                emit_imm(self.segments[self.active_seg], 0, 32)
+                self.add_relocation(self.active_seg, imm_offset, 'abs32', op_str)
+            else:
+                if self.object_mode and self.looks_like_symbol(op_str):
+                    raise ValueError(f"Undefined symbol: {op_str}")
+                emit_imm(self.segments[self.active_seg], self.parse_operand(op_str), 32)
+            instr_len = 7
+        elif t == 'J0':
+            c = cond if cond is not None else 0x00
+            imm_str = operands[0]
+            if c == 0x00 and len(operands) > 1:
+                c = CONDS.get(operands[0].upper(), 0x00)
+                imm_str = operands[1]
+            imm_str = imm_str.strip().rstrip(',')
+            self.append_code(c)
 
-            if mnemonic == '.ORG':
-                self.set_addr(self.parse_number(operands[0]) if operands else self.parse_number(line.split()[1]))
-                continue
-            elif mnemonic == '.ENTRY':
-                self.entry = operands[0].upper() if operands else line.split()[1].upper()
-                continue
-            elif mnemonic == '.GLOBAL':
-                name = operands[0].upper() if operands else line.split()[1].upper()
-                self.globals.add(name)
-                continue
-            elif mnemonic == '.EXTERN':
-                name = operands[0].upper() if operands else line.split()[1].upper()
-                self.externs.add(name)
-                continue
-            elif mnemonic == '.DB':
-                self.add_addr(self.calc_data_size(line[3:].strip(), 1))
-                continue
-            elif mnemonic == '.DW':
-                self.add_addr(self.calc_data_size(line[3:].strip(), 2))
-                continue
-            elif mnemonic == '.DD':
-                self.add_addr(self.calc_data_size(line[3:].strip(), 4))
-                continue
+            if self.object_mode and self.is_symbol_ref(imm_str):
+                imm_offset = self.section_offsets[self.active_seg] + 2
+                emit_imm(self.segments[self.active_seg], 0, 32)
+                if mnemonic == 'JMP':
+                    pc_after = self.section_offsets[self.active_seg] + 6
+                    self.add_relocation(self.active_seg, imm_offset, 'rel32', imm_str, pc_after)
+                else:
+                    self.add_relocation(self.active_seg, imm_offset, 'abs32', imm_str)
+            else:
+                if self.object_mode and self.looks_like_symbol(imm_str):
+                    raise ValueError(f"Undefined symbol: {imm_str}")
+                target_addr = self.parse_operand(imm_str)
+                if mnemonic == 'JMP':
+                    ic_after = self.cur_addr() + 6
+                    val = target_addr - ic_after
+                else:
+                    val = target_addr
+                emit_imm(self.segments[self.active_seg], val, 32)
+            instr_len = 6
+        elif t == 'J1':
+            c = cond if cond is not None else 0x00
+            reg_str = operands[0]
+            if c == 0x00 and len(operands) > 1:
+                c = CONDS.get(operands[0].upper(), 0x00)
+                reg_str = operands[1]
+            self.append_code(c)
+            self.append_code(REGISTERS[reg_str.upper()])
+            instr_len = 3
+        elif t in ['STR', 'LOD']:
+            if len(operands) < 2:
+                print(f"Not enough operands for {mnemonic}")
+                return
 
-            base_mnem = mnemonic.split('.')[0]
-            if base_mnem in ['JMP', 'JMPR', 'JMA'] and mnemonic != base_mnem:
-                mnemonic = base_mnem
+            if not (operands[1].startswith('[') and operands[1].endswith(']')):
+                print(f"Error: Address in {mnemonic} must be in brackets: {operands[1]}")
+                return
 
-            self.add_addr(self.get_instr_len(mnemonic, operands))
+            mode, l = self.get_mem_mode_and_len(operands[1])
+            sf_offset = {'F':0, 'S':1, 'R':2, 'SD':3, 'RD':4}[mode]
+            self.segments[self.active_seg][-1] += sf_offset
+            self.append_code(REGISTERS[operands[0].upper()])
+
+            if mode == 'F':
+                inner = operands[1].strip()[1:-1].strip()
+                if self.object_mode and self.is_symbol_ref(inner):
+                    imm_offset = self.section_offsets[self.active_seg] + 2
+                    emit_imm(self.segments[self.active_seg], 0, 32)
+                    self.add_relocation(self.active_seg, imm_offset, 'abs32', inner)
+                else:
+                    if self.object_mode and self.looks_like_symbol(inner):
+                        raise ValueError(f"Undefined symbol: {inner}")
+                    data = self.parse_mem_data(operands[1], mode)
+                    self.extend_code(data)
+            else:
+                data = self.parse_mem_data(operands[1], mode)
+                self.extend_code(data)
+            instr_len = l
+
+        self.add_addr(instr_len)
 
     def second_pass(self, lines):
         for line in lines:
-            line = line.split(';')[0].strip()
-            if not line: continue
-
-            match = re.match(r'^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)', line)
-            if match:
-                line = match.group(2).strip()
-                if not line: continue
-
-            up = line.upper()
-            if up == '.TEXT':
-                self.active_seg = 'text'
-                continue
-            elif up == '.DATA':
-                self.active_seg = 'data'
-                continue
-            elif up == '.BSS':
-                self.active_seg = 'bss'
-                continue
-
-            mnem_match = re.match(r'^([a-zA-Z_][a-zA-Z0-9_\.]*|\.[a-zA-Z]+)\s+(.*)', line)
-            if mnem_match:
-                mnemonic = mnem_match.group(1).upper()
-                rest = mnem_match.group(2)
-                operands = self.parse_operands(rest)
-            else:
-                mnemonic = line.upper()
-                operands = []
-
-            if mnemonic == '.ORG':
-                self.set_addr(self.parse_number(operands[0]) if operands else self.parse_number(line.split()[1]))
-                continue
-            elif mnemonic in ['.ENTRY', '.GLOBAL', '.EXTERN']:
-                continue
-            elif mnemonic == '.DB':
-                raw_data = line[3:].strip()
-                self.emit_data(raw_data, 1)
-                self.add_addr(self.calc_data_size(raw_data, 1))
-                continue
-            elif mnemonic == '.DW':
-                raw_data = line[3:].strip()
-                self.emit_data(raw_data, 2)
-                self.add_addr(self.calc_data_size(raw_data, 2))
-                continue
-            elif mnemonic == '.DD':
-                raw_data = line[3:].strip()
-                self.emit_data(raw_data, 4)
-                self.add_addr(self.calc_data_size(raw_data, 4))
-                continue
-
-            base_mnem = mnemonic.split('.')[0]
-            cond = None
-            if base_mnem in ['JMP', 'JMPR', 'JMA'] and mnemonic != base_mnem:
-                cond_str = mnemonic.split('.', 1)[1]
-                cond = CONDS.get(cond_str.upper(), 0x00)
-                mnemonic = base_mnem
-
-            if mnemonic not in OPCODES:
-                print(f"Unknown instruction: {mnemonic}")
-                continue
-
-            info = OPCODES[mnemonic]
-            self.append_code(info['op'])
-            if info['sf'] is not None:
-                self.append_code(info['sf'])
-
-            t = info['type']
-            instr_len = 0
-
-            if t == 'S0':
-                instr_len = 1
-            elif t == 'S1':
-                self.append_code(REGISTERS[operands[0].upper()])
-                instr_len = 2
-            elif t == 'S2':
-                self.append_code(REGISTERS[operands[0].upper()])
-                instr_len = 2
-            elif t == 'S3':
-                self.append_code(REGISTERS[operands[0].upper()])
-                instr_len = 2
-            elif t == 'S4':
-                self.append_code(self.parse_operand(operands[0]) & 0xFF)
-                instr_len = 2
-            elif t == 'S6':
-                op_str = operands[0].strip().rstrip(',')
-                if self.object_mode and self.is_symbol_ref(op_str):
-                    imm_offset = self.section_offsets[self.active_seg] + 1
-                    emit_imm(self.segments[self.active_seg], 0, 32)
-                    if mnemonic == 'CALL':
-                        pc_after = self.section_offsets[self.active_seg] + 5
-                        self.add_relocation(self.active_seg, imm_offset, 'rel32', op_str, pc_after)
-                    else:
-                        self.add_relocation(self.active_seg, imm_offset, 'abs32', op_str)
-                else:
-                    if self.object_mode and self.looks_like_symbol(op_str):
-                        raise ValueError(f"Undefined symbol: {op_str}")
-                    target_addr = self.parse_operand(op_str)
-                    if mnemonic == 'CALL':
-                        ic_after = self.cur_addr() + 5
-                        val = target_addr - ic_after
-                    else:
-                        val = target_addr
-                    emit_imm(self.segments[self.active_seg], val, 32)
-                instr_len = 5
-            elif t == 'H0':
-                self.append_code(REGISTERS[operands[0].upper()])
-                self.append_code(self.parse_operand(operands[1]) & 0xFF)
-                instr_len = 3
-            elif t == 'A0':
-                self.append_code(REGISTERS[operands[0].upper()])
-                self.append_code(REGISTERS[operands[1].upper()])
-                instr_len = 4
-            elif t == 'A1':
-                self.append_code(REGISTERS[operands[0].upper()])
-                emit_imm(self.segments[self.active_seg], self.parse_operand(operands[1]), 8)
-                instr_len = 4
-            elif t == 'A2':
-                self.append_code(REGISTERS[operands[0].upper()])
-                emit_imm(self.segments[self.active_seg], self.parse_operand(operands[1]), 16)
-                instr_len = 5
-            elif t == 'A3':
-                self.append_code(REGISTERS[operands[0].upper()])
-                op_str = operands[1].strip().rstrip(',')
-                if self.object_mode and self.is_symbol_ref(op_str):
-                    imm_offset = self.section_offsets[self.active_seg] + 3
-                    emit_imm(self.segments[self.active_seg], 0, 32)
-                    self.add_relocation(self.active_seg, imm_offset, 'abs32', op_str)
-                else:
-                    if self.object_mode and self.looks_like_symbol(op_str):
-                        raise ValueError(f"Undefined symbol: {op_str}")
-                    emit_imm(self.segments[self.active_seg], self.parse_operand(op_str), 32)
-                instr_len = 7
-            elif t == 'D0':
-                self.append_code(REGISTERS[operands[0].upper()])
-                self.append_code(REGISTERS[operands[1].upper()])
-                instr_len = 4
-            elif t == 'D1B':
-                self.append_code(REGISTERS[operands[0].upper()])
-                emit_imm(self.segments[self.active_seg], self.parse_operand(operands[1]), 8)
-                instr_len = 4
-            elif t == 'D1W':
-                self.append_code(REGISTERS[operands[0].upper()])
-                emit_imm(self.segments[self.active_seg], self.parse_operand(operands[1]), 16)
-                instr_len = 5
-            elif t == 'D1DW':
-                self.append_code(REGISTERS[operands[0].upper()])
-                op_str = operands[1].strip().rstrip(',')
-                if self.object_mode and self.is_symbol_ref(op_str):
-                    imm_offset = self.section_offsets[self.active_seg] + 3
-                    emit_imm(self.segments[self.active_seg], 0, 32)
-                    self.add_relocation(self.active_seg, imm_offset, 'abs32', op_str)
-                else:
-                    if self.object_mode and self.looks_like_symbol(op_str):
-                        raise ValueError(f"Undefined symbol: {op_str}")
-                    emit_imm(self.segments[self.active_seg], self.parse_operand(op_str), 32)
-                instr_len = 7
-            elif t == 'J0':
-                c = cond if cond is not None else 0x00
-                imm_str = operands[0]
-                if c == 0x00 and len(operands) > 1:
-                    c = CONDS.get(operands[0].upper(), 0x00)
-                    imm_str = operands[1]
-                imm_str = imm_str.strip().rstrip(',')
-                self.append_code(c)
-
-                if self.object_mode and self.is_symbol_ref(imm_str):
-                    imm_offset = self.section_offsets[self.active_seg] + 2
-                    emit_imm(self.segments[self.active_seg], 0, 32)
-                    if mnemonic == 'JMP':
-                        pc_after = self.section_offsets[self.active_seg] + 6
-                        self.add_relocation(self.active_seg, imm_offset, 'rel32', imm_str, pc_after)
-                    else:
-                        self.add_relocation(self.active_seg, imm_offset, 'abs32', imm_str)
-                else:
-                    if self.object_mode and self.looks_like_symbol(imm_str):
-                        raise ValueError(f"Undefined symbol: {imm_str}")
-                    target_addr = self.parse_operand(imm_str)
-                    if mnemonic == 'JMP':
-                        ic_after = self.cur_addr() + 6
-                        val = target_addr - ic_after
-                    else:
-                        val = target_addr
-                    emit_imm(self.segments[self.active_seg], val, 32)
-                instr_len = 6
-            elif t == 'J1':
-                c = cond if cond is not None else 0x00
-                reg_str = operands[0]
-                if c == 0x00 and len(operands) > 1:
-                    c = CONDS.get(operands[0].upper(), 0x00)
-                    reg_str = operands[1]
-                self.append_code(c)
-                self.append_code(REGISTERS[reg_str.upper()])
-                instr_len = 3
-            elif t in ['STR', 'LOD']:
-                if len(operands) < 2:
-                    print(f"Not enough operands for {mnemonic}")
-                    continue
-
-                if not (operands[1].startswith('[') and operands[1].endswith(']')):
-                    print(f"Error: Address in {mnemonic} must be in brackets: {operands[1]}")
-                    continue
-
-                mode, l = self.get_mem_mode_and_len(operands[1])
-                sf_offset = {'F':0, 'S':1, 'R':2, 'SD':3, 'RD':4}[mode]
-                self.segments[self.active_seg][-1] += sf_offset
-                self.append_code(REGISTERS[operands[0].upper()])
-
-                if mode == 'F':
-                    inner = operands[1].strip()[1:-1].strip()
-                    if self.object_mode and self.is_symbol_ref(inner):
-                        imm_offset = self.section_offsets[self.active_seg] + 2
-                        emit_imm(self.segments[self.active_seg], 0, 32)
-                        self.add_relocation(self.active_seg, imm_offset, 'abs32', inner)
-                    else:
-                        if self.object_mode and self.looks_like_symbol(inner):
-                            raise ValueError(f"Undefined symbol: {inner}")
-                        data = self.parse_mem_data(operands[1], mode)
-                        self.extend_code(data)
-                else:
-                    data = self.parse_mem_data(operands[1], mode)
-                    self.extend_code(data)
-                instr_len = l
-
-            self.add_addr(instr_len)
+            self.process_second_pass_line(line)
 
     def compile(self, source):
         lines = source.splitlines()
