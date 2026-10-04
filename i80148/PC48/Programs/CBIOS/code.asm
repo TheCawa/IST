@@ -1,5 +1,5 @@
 ; ===========================
-; CBIOS v0.3 - Cawa's BIOS
+; CBIOS v0.3.1 - Cawa's BIOS
 ; ===========================
 
 .org 0x000000
@@ -82,17 +82,17 @@ do_boot_load:
     LDI.DW EX2, 21
     LDI.DW IX, msg_loading
     CALL print_at
-    XOR X1, X1
-    XOR X2, X2
-    XOR X3, X3
-    XOR X4, X4
-    XOR X5, X5
-    XOR X6, X6
-    XOR X7, X7
+    XOR EX1, EX1
+    XOR EX2, EX2
+    XOR EX3, EX3
+    XOR EX4, EX4
+    XOR EX5, EX5
+    XOR EX6, EX6
+    XOR EX7, EX7
     LDI.DW IX, 0x00060000
     XOR A0, A0
     LDI.DW EX2, 0x00000000
-    LDI.DW EX3, 0x00000001
+    LDI.DW EX3, 0x00000008
     LOD.DW A1, [0x00030104]
     CALLR A1
     CMP EX1, R0
@@ -293,14 +293,13 @@ print_hex_word:
 
 read_disk:
     XOR A7, A7
-    LDI.W X4, 1024
 
 read_disk_loop_sectors:
+    XOR A7, A7
+    LDI.DW EX4, 256
     STR.DW EX2, [0x00020112]
     LDI.B XL7, 2
-    STR.DW EX7, [0x00020111]
-
-    ; Таймаут ожидания
+    STR.B XL7, [0x00020111]
     LDI.DW EX6, 0x0000FFFF
 
 read_disk_wait_ready:
@@ -309,20 +308,19 @@ read_disk_wait_ready:
     AND EX7, EX5
     CMP EX7, R0
     JMP.E read_disk_ready
-    
+
     DEC EX6
     CMP.DW EX6, 0x00000000
     JMP.NE read_disk_wait_ready
-    
-    ; Таймаут истек
+
     LDI.DW EX1, 0xFFFFFFFF
     JMP.NE disk_timeout_error
 
 read_disk_ready:
     LDI.B XL7, 1
-    STR.DW EX7, [0x00020111]
+    STR.B XL7, [0x00020111]
     XOR EX7, EX7
-    STR.DW EX7, [0x00020111]
+    STR.B XL7, [0x00020111]
 
 read_disk_read_data:
     STR.DW A7, [0x0002011C]
@@ -341,19 +339,20 @@ read_disk_read_data:
     
     ; Успех
     LDI.DW EX1, 0x00000000
-    XOR X1, X1
-    XOR X2, X2
-    XOR X3, X3
-    XOR X4, X4
-    XOR X5, X5
-    XOR X6, X6
-    XOR X7, X7
+    XOR EX1, EX1
+    XOR EX2, EX2
+    XOR EX3, EX3
+    XOR EX4, EX4
+    XOR EX5, EX5
+    XOR EX6, EX6
+    XOR EX7, EX7
     RET
 
 write_disk:
-    LDI.W X4, 256
 
 write_disk_loop_sectors:
+    XOR A7, A7
+    LDI.DW EX4, 256
     STR.DW EX2, [0x00020112]
 
 write_disk_write_data:
