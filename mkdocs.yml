@@ -31,10 +31,14 @@ markdown_extensions:
       anchor_linenums: true
   - toc:
       permalink: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
 
 nav:
   - Главная: index.md
   - Начало работы:
+    - Обзор: getting-started/index.md
     - Установка: getting-started/installation.md
     - Быстрый старт: getting-started/quick-start.md
   - Архитектура:
