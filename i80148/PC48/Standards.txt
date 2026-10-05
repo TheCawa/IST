@@ -55,3 +55,23 @@
  --------
  BIOS load 1 sector (1024b) in memory (0x00060000)
  
+ SCROLL=OFF
+ CURSOR=OFF
+ VC_MODE=0x00 (80x25; 16 colors)
+ TERM_ATTR=0x07
+ 
+CASM148:
+	PUSH EX1
+	PUSH A7
+	LDI.dw A7, 0x00020019
+	LDI.b XL1, 0x01
+	STR.b XL1, [A7]
+	STR.b R0, [A7+1]
+	LDI.b XL1, 0x07
+	STR.b XL1, [A7+2]
+	LDI.b XL1, 0x03
+	STR.b XL1, [A7]
+	LDI.b XL1, 0x05
+	STR.b XL1, [A7]
+	POP A7
+	POP EX1
