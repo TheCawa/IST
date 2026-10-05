@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#регистры-и-адресация" class="md-skip">
           Перейти к содержанию
         </a>
       
@@ -244,7 +244,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../getting-started/installation/" class="md-tabs__link">
+        <a href="../../../getting-started/" class="md-tabs__link">
           
   
   
@@ -461,6 +461,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Обзор
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1332,7 +1360,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#карта-регистров" class="md-nav__link">
     <span class="md-ellipsis">
       
         Карта регистров
@@ -1343,7 +1371,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#x" class="md-nav__link">
+  <a href="#составные-регистры-x" class="md-nav__link">
     <span class="md-ellipsis">
       
         Составные регистры X
@@ -1354,7 +1382,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modes" class="md-nav__link">
+  <a href="#режимы-адресации-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
         Режимы адресации (Modes)
@@ -2221,7 +2249,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#карта-регистров" class="md-nav__link">
     <span class="md-ellipsis">
       
         Карта регистров
@@ -2232,7 +2260,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#x" class="md-nav__link">
+  <a href="#составные-регистры-x" class="md-nav__link">
     <span class="md-ellipsis">
       
         Составные регистры X
@@ -2243,7 +2271,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modes" class="md-nav__link">
+  <a href="#режимы-адресации-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
         Режимы адресации (Modes)
@@ -2273,8 +2301,8 @@
   
 
 
-<h1 id="_1">Регистры и адресация<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h2 id="_2">Карта регистров<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h1 id="регистры-и-адресация">Регистры и адресация<a class="headerlink" href="#регистры-и-адресация" title="Permanent link">&para;</a></h1>
+<h2 id="карта-регистров">Карта регистров<a class="headerlink" href="#карта-регистров" title="Permanent link">&para;</a></h2>
 <p>Регистровое пространство I8046 организовано по 5-битному адресу (32 регистра). Ниже приведена полная карта.</p>
 <table>
 <thead>
@@ -2447,7 +2475,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="x">Составные регистры X<a class="headerlink" href="#x" title="Permanent link">&para;</a></h2>
+<h2 id="составные-регистры-x">Составные регистры X<a class="headerlink" href="#составные-регистры-x" title="Permanent link">&para;</a></h2>
 <p>Каждый из пяти регистров <code>X1</code>–<code>X5</code> является 24-битным и состоит из трёх частей:</p>
 <ul>
 <li><code>XHn</code> - старший байт (High)</li>
@@ -2455,7 +2483,7 @@
 <li><code>Xn</code> - полный 24-битный регистр, адресуемый как <code>[XHn + XLn]</code></li>
 </ul>
 <p>Это позволяет работать как с целыми 24-битными значениями, так и с отдельными байтами.</p>
-<h2 id="modes">Режимы адресации (Modes)<a class="headerlink" href="#modes" title="Permanent link">&para;</a></h2>
+<h2 id="режимы-адресации-modes">Режимы адресации (Modes)<a class="headerlink" href="#режимы-адресации-modes" title="Permanent link">&para;</a></h2>
 <p>В инструкциях, где присутствует поле <code>SF</code> (suffix / mode), используются следующие режимы:</p>
 <table>
 <thead>

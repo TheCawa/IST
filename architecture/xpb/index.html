@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#xpb" class="md-skip">
+        <a href="#шина-xpb" class="md-skip">
           Перейти к содержанию
         </a>
       
@@ -244,7 +244,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../getting-started/installation/" class="md-tabs__link">
+        <a href="../../getting-started/" class="md-tabs__link">
           
   
   
@@ -461,6 +461,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Обзор
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -789,7 +817,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#формат-шины" class="md-nav__link">
     <span class="md-ellipsis">
       
         Формат шины
@@ -800,7 +828,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#протокол-карты-регистров" class="md-nav__link">
     <span class="md-ellipsis">
       
         Протокол карты регистров
@@ -811,7 +839,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#xpb_1" class="md-nav__link">
+  <a href="#банки-xpb" class="md-nav__link">
     <span class="md-ellipsis">
       
         Банки XPB
@@ -822,10 +850,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#xpb1-" class="md-nav__link">
+  <a href="#дисковый-контроллер-xpb1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        XPB1 - дисковый контроллер
+        Дисковый контроллер XPB1
       
     </span>
   </a>
@@ -2224,7 +2252,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#формат-шины" class="md-nav__link">
     <span class="md-ellipsis">
       
         Формат шины
@@ -2235,7 +2263,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#протокол-карты-регистров" class="md-nav__link">
     <span class="md-ellipsis">
       
         Протокол карты регистров
@@ -2246,7 +2274,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#xpb_1" class="md-nav__link">
+  <a href="#банки-xpb" class="md-nav__link">
     <span class="md-ellipsis">
       
         Банки XPB
@@ -2257,10 +2285,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#xpb1-" class="md-nav__link">
+  <a href="#дисковый-контроллер-xpb1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        XPB1 - дисковый контроллер
+        Дисковый контроллер XPB1
       
     </span>
   </a>
@@ -2287,9 +2315,9 @@
   
 
 
-<h1 id="xpb">Шина XPB<a class="headerlink" href="#xpb" title="Permanent link">&para;</a></h1>
+<h1 id="шина-xpb">Шина XPB<a class="headerlink" href="#шина-xpb" title="Permanent link">&para;</a></h1>
 <p><strong>XPB</strong> (eXtension Peripheral Bus) - шина расширения для подключения периферийных устройств, не входящих в базовый набор системы. Через неё подключаются дисковые контроллеры, сетевые карты и другие устройства.</p>
-<h2 id="_1">Формат шины<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="формат-шины">Формат шины<a class="headerlink" href="#формат-шины" title="Permanent link">&para;</a></h2>
 <p>Шина передаёт данные синхронно по тактовому сигналу.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;- High | Low -&gt;
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -2351,7 +2379,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_2">Протокол карты регистров<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="протокол-карты-регистров">Протокол карты регистров<a class="headerlink" href="#протокол-карты-регистров" title="Permanent link">&para;</a></h2>
 <p>Каждое XPB-устройство обязано реализовывать базовый набор регистров, называемый <strong>DSR</strong> (Device Service Registers).</p>
 <table>
 <thead>
@@ -2402,13 +2430,13 @@
 </tbody>
 </table>
 <p><code>DSR</code> (Device Service Registers) - это 8 регистров, назначение которых определяется самим устройством.</p>
-<h2 id="xpb_1">Банки XPB<a class="headerlink" href="#xpb_1" title="Permanent link">&para;</a></h2>
+<h2 id="банки-xpb">Банки XPB<a class="headerlink" href="#банки-xpb" title="Permanent link">&para;</a></h2>
 <p>Диапазон банков <code>FF00h</code>–<code>FFFFh</code> зарезервирован под XPB-устройства. Каждому устройству соответствует один банк.</p>
 <blockquote>
 <p><strong>Важно:</strong> банк <code>0001h</code> и XPB <code>#01</code> всегда зарезервированы под дисковый контроллер.</p>
 </blockquote>
-<h2 id="xpb1-">XPB1 - дисковый контроллер<a class="headerlink" href="#xpb1-" title="Permanent link">&para;</a></h2>
-<p>Первый XPB-контроллер в системе дисковый. Его регистры находятся по адресам <code>0x00020110</code>–<code>0x0002011C</code>. Полное описание - в разделах <a href="../io-ports/#xpb1--дисковый-контроллер">I/O-порты</a> и <a href="../devices/#дисковый-контроллер-xpb1">Устройства</a>.</p>
+<h2 id="дисковый-контроллер-xpb1">Дисковый контроллер XPB1<a class="headerlink" href="#дисковый-контроллер-xpb1" title="Permanent link">&para;</a></h2>
+<p>Первый XPB-контроллер в системе дисковый. Его регистры находятся по адресам <code>0x00020110</code>–<code>0x0002011C</code>. Полное описание - в разделах <a href="../io-ports/#дисковый-контроллер-xpb1">I/O-порты</a> и <a href="../devices/#дисковый-контроллер-xpb1">Устройства</a>.</p>
 
 
 

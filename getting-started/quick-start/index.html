@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#быстрый-старт" class="md-skip">
           Перейти к содержанию
         </a>
       
@@ -246,7 +246,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../installation/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -474,6 +474,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Обзор
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         
   
@@ -562,7 +590,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#1-написать-исходник" class="md-nav__link">
     <span class="md-ellipsis">
       
         1. Написать исходник
@@ -573,7 +601,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#2-собрать" class="md-nav__link">
     <span class="md-ellipsis">
       
         2. Собрать
@@ -584,7 +612,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
+  <a href="#3-запустить-в-эмуляторе" class="md-nav__link">
     <span class="md-ellipsis">
       
         3. Запустить в эмуляторе
@@ -595,7 +623,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4" class="md-nav__link">
+  <a href="#4-что-произошло-под-капотом" class="md-nav__link">
     <span class="md-ellipsis">
       
         4. Что произошло под капотом
@@ -606,7 +634,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-" class="md-nav__link">
+  <a href="#5-собрать-по-взрослому-опционально" class="md-nav__link">
     <span class="md-ellipsis">
       
         5. Собрать по-взрослому (опционально)
@@ -2235,7 +2263,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#1-написать-исходник" class="md-nav__link">
     <span class="md-ellipsis">
       
         1. Написать исходник
@@ -2246,7 +2274,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#2-собрать" class="md-nav__link">
     <span class="md-ellipsis">
       
         2. Собрать
@@ -2257,7 +2285,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
+  <a href="#3-запустить-в-эмуляторе" class="md-nav__link">
     <span class="md-ellipsis">
       
         3. Запустить в эмуляторе
@@ -2268,7 +2296,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4" class="md-nav__link">
+  <a href="#4-что-произошло-под-капотом" class="md-nav__link">
     <span class="md-ellipsis">
       
         4. Что произошло под капотом
@@ -2279,7 +2307,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-" class="md-nav__link">
+  <a href="#5-собрать-по-взрослому-опционально" class="md-nav__link">
     <span class="md-ellipsis">
       
         5. Собрать по-взрослому (опционально)
@@ -2309,9 +2337,9 @@
   
 
 
-<h1 id="_1">Быстрый старт<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h1 id="быстрый-старт">Быстрый старт<a class="headerlink" href="#быстрый-старт" title="Permanent link">&para;</a></h1>
 <p>Соберём простую программу, которая выводит «Hello, World!» в терминал, и запустим её в эмуляторе.</p>
-<h2 id="1">1. Написать исходник<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<h2 id="1-написать-исходник">1. Написать исходник<a class="headerlink" href="#1-написать-исходник" title="Permanent link">&para;</a></h2>
 <p>Создай файл <code>hello.asm</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">.ORG</span><span class="w"> </span><span class="mi">0x00060000</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">.TEXT</span>
@@ -2335,7 +2363,7 @@
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="na">.DATA</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nl">msg:</span><span class="w">    </span><span class="na">.db</span><span class="w"> </span><span class="s">&quot;Hello, World!&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0x0A</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span>
 </code></pre></div>
-<h2 id="2">2. Собрать<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<h2 id="2-собрать">2. Собрать<a class="headerlink" href="#2-собрать" title="Permanent link">&para;</a></h2>
 <p>Простейший вариант - сразу в плоский бинарник:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>CASM148.py<span class="w"> </span>hello.asm<span class="w"> </span>-o<span class="w"> </span>hello.bin
 </code></pre></div>
@@ -2349,12 +2377,12 @@
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Segments: text=32, data=14, bss=0
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Written: hello.bin and hello.hex
 </code></pre></div>
-<h2 id="3">3. Запустить в эмуляторе<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<h2 id="3-запустить-в-эмуляторе">3. Запустить в эмуляторе<a class="headerlink" href="#3-запустить-в-эмуляторе" title="Permanent link">&para;</a></h2>
 <p>Эмулятор находится в <code>emulator\dist\emulator.exe</code> (Сборках пока что только под Windows), запустите его, в вкладке FILE выбираем пункт Open Disk Image... и выбираем наш <code>hello.bin</code>.</p>
 <p>В окне эмулятора должен появиться терминал с надписью:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Hello, World!
 </code></pre></div>
-<h2 id="4">4. Что произошло под капотом<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<h2 id="4-что-произошло-под-капотом">4. Что произошло под капотом<a class="headerlink" href="#4-что-произошло-под-капотом" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Программа загружена по адресу <code>0x00060000</code> - это начало региона <code>USER RAM</code>.</li>
 <li><code>main</code> установил указатель стека, загрузил адрес строки в <code>IX</code> и вызвал <code>print_string</code>.</li>
@@ -2362,7 +2390,7 @@
 <li>Видеокарта по этому адресу выводит символ в терминал.</li>
 <li>Когда встречается <code>\0</code>, программа завершается через <code>HALT</code>.</li>
 </ol>
-<h2 id="5-">5. Собрать по-взрослому (опционально)<a class="headerlink" href="#5-" title="Permanent link">&para;</a></h2>
+<h2 id="5-собрать-по-взрослому-опционально">5. Собрать по-взрослому (опционально)<a class="headerlink" href="#5-собрать-по-взрослому-опционально" title="Permanent link">&para;</a></h2>
 <p>Ту же программу можно собрать в объектный файл и слинковать:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>CASM148.py<span class="w"> </span>-c<span class="w"> </span>hello.asm<span class="w"> </span>-o<span class="w"> </span>hello.o
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python<span class="w"> </span>LINK148.py<span class="w"> </span>hello.o<span class="w"> </span>-o<span class="w"> </span>hello.bin<span class="w"> </span>--entry<span class="w"> </span>main

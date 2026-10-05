@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#прерывания-и-исключения" class="md-skip">
           Перейти к содержанию
         </a>
       
@@ -244,7 +244,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../getting-started/installation/" class="md-tabs__link">
+        <a href="../../getting-started/" class="md-tabs__link">
           
   
   
@@ -461,6 +461,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Обзор
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -817,7 +845,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#таблица-векторов" class="md-nav__link">
     <span class="md-ellipsis">
       
         Таблица векторов
@@ -828,7 +856,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#int-irq" class="md-nav__link">
+  <a href="#разница-между-int-и-irq" class="md-nav__link">
     <span class="md-ellipsis">
       
         Разница между INT и IRQ
@@ -839,7 +867,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#маскирование" class="md-nav__link">
     <span class="md-ellipsis">
       
         Маскирование
@@ -850,7 +878,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#обработка-прерывания" class="md-nav__link">
     <span class="md-ellipsis">
       
         Обработка прерывания
@@ -2224,7 +2252,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#таблица-векторов" class="md-nav__link">
     <span class="md-ellipsis">
       
         Таблица векторов
@@ -2235,7 +2263,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#int-irq" class="md-nav__link">
+  <a href="#разница-между-int-и-irq" class="md-nav__link">
     <span class="md-ellipsis">
       
         Разница между INT и IRQ
@@ -2246,7 +2274,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#маскирование" class="md-nav__link">
     <span class="md-ellipsis">
       
         Маскирование
@@ -2257,7 +2285,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#обработка-прерывания" class="md-nav__link">
     <span class="md-ellipsis">
       
         Обработка прерывания
@@ -2287,8 +2315,8 @@
   
 
 
-<h1 id="_1">Прерывания и исключения<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h2 id="_2">Таблица векторов<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h1 id="прерывания-и-исключения">Прерывания и исключения<a class="headerlink" href="#прерывания-и-исключения" title="Permanent link">&para;</a></h1>
+<h2 id="таблица-векторов">Таблица векторов<a class="headerlink" href="#таблица-векторов" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2395,7 +2423,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ISR_addr = IDTR + (vector &lt;&lt; 2)
 </code></pre></div>
 <p>То есть каждый вектор занимает 4 байта в таблице.</p>
-<h2 id="int-irq">Разница между INT и IRQ<a class="headerlink" href="#int-irq" title="Permanent link">&para;</a></h2>
+<h2 id="разница-между-int-и-irq">Разница между INT и IRQ<a class="headerlink" href="#разница-между-int-и-irq" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2423,14 +2451,14 @@
 </tbody>
 </table>
 <p>При программном прерывании <code>INT</code> адрес возврата - <code>IC + 2</code>, так как инструкция занимает 2 байта. При аппаратном прерывании <code>IRQ</code> - <code>IC + 0</code>, так как прерывание может произойти между любыми инструкциями.</p>
-<h2 id="_3">Маскирование<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="маскирование">Маскирование<a class="headerlink" href="#маскирование" title="Permanent link">&para;</a></h2>
 <p>Прерывания можно запрещать и разрешать командами процессора:</p>
 <ul>
 <li><code>CLI</code> - запретить прерывания.</li>
 <li><code>STI</code> - разрешить прерывания.</li>
 </ul>
 <p>Также есть регистр <code>IRQ_MASK</code>, который управляет маскированием отдельных источников.</p>
-<h2 id="_4">Обработка прерывания<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h2 id="обработка-прерывания">Обработка прерывания<a class="headerlink" href="#обработка-прерывания" title="Permanent link">&para;</a></h2>
 <p>При возникновении прерывания:</p>
 <ol>
 <li>Текущее значение <code>IC</code> (адрес возврата) сохраняется в стек.</li>
