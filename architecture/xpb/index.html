@@ -8,25 +8,31 @@
       
       
       
+        <link rel="canonical" href="https://TheCawa.github.io/IST/architecture/xpb/">
       
+      
+        <link rel="prev" href="../io-ports/">
+      
+      
+        <link rel="next" href="../interrupts/">
       
       
         
       
       
-      <link rel="icon" href="/IST/assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>IST Documentation</title>
+        <title>Шина XPB - IST Documentation</title>
       
     
     
-      <link rel="stylesheet" href="/IST/assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="/IST/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -45,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL("/IST/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -69,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#xpb" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -79,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
-    <a href="/IST/." title="IST Documentation" class="md-header__button md-logo" aria-label="IST Documentation" data-md-component="logo">
+    <a href="../.." title="IST Documentation" class="md-header__button md-logo" aria-label="IST Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -99,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Шина XPB
             
           </span>
         </div>
@@ -212,7 +223,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/IST/." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -233,7 +244,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/IST/getting-started/installation/" class="md-tabs__link">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
           
   
   
@@ -249,11 +260,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="/IST/architecture/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -273,7 +286,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/IST/processors/" class="md-tabs__link">
+        <a href="../../processors/" class="md-tabs__link">
           
   
   
@@ -293,7 +306,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/IST/tools/" class="md-tabs__link">
+        <a href="../../tools/" class="md-tabs__link">
           
   
   
@@ -313,7 +326,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/IST/development/contributing/" class="md-tabs__link">
+        <a href="../../development/contributing/" class="md-tabs__link">
           
   
   
@@ -347,7 +360,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/IST/." title="IST Documentation" class="md-nav__button md-logo" aria-label="IST Documentation" data-md-component="logo">
+    <a href="../.." title="IST Documentation" class="md-nav__button md-logo" aria-label="IST Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -377,7 +390,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -456,7 +469,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/getting-started/installation/" class="md-nav__link">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -484,7 +497,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/getting-started/quick-start/" class="md-nav__link">
+      <a href="../../getting-started/quick-start/" class="md-nav__link">
         
   
   
@@ -516,26 +529,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -553,7 +571,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -571,7 +589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -599,7 +617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/overview/" class="md-nav__link">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -627,7 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/standards/" class="md-nav__link">
+      <a href="../standards/" class="md-nav__link">
         
   
   
@@ -655,7 +673,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/memory/" class="md-nav__link">
+      <a href="../memory/" class="md-nav__link">
         
   
   
@@ -683,7 +701,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/io-ports/" class="md-nav__link">
+      <a href="../io-ports/" class="md-nav__link">
         
   
   
@@ -708,10 +726,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/IST/architecture/xpb/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Шина XPB
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -727,6 +772,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Формат шины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Протокол карты регистров
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xpb_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Банки XPB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xpb1-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XPB1 - дисковый контроллер
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -739,7 +848,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/interrupts/" class="md-nav__link">
+      <a href="../interrupts/" class="md-nav__link">
         
   
   
@@ -767,7 +876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/devices/" class="md-nav__link">
+      <a href="../devices/" class="md-nav__link">
         
   
   
@@ -854,7 +963,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/" class="md-nav__link">
+      <a href="../../processors/" class="md-nav__link">
         
   
   
@@ -934,7 +1043,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/" class="md-nav__link">
+      <a href="../../processors/i80148/" class="md-nav__link">
         
   
   
@@ -962,7 +1071,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/registers/" class="md-nav__link">
+      <a href="../../processors/i80148/registers/" class="md-nav__link">
         
   
   
@@ -990,7 +1099,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/instruction-formats/" class="md-nav__link">
+      <a href="../../processors/i80148/instruction-formats/" class="md-nav__link">
         
   
   
@@ -1018,7 +1127,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/instruction-set/" class="md-nav__link">
+      <a href="../../processors/i80148/instruction-set/" class="md-nav__link">
         
   
   
@@ -1046,7 +1155,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/flags/" class="md-nav__link">
+      <a href="../../processors/i80148/flags/" class="md-nav__link">
         
   
   
@@ -1074,7 +1183,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/microcode/" class="md-nav__link">
+      <a href="../../processors/i80148/microcode/" class="md-nav__link">
         
   
   
@@ -1102,7 +1211,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/alu-bsu/" class="md-nav__link">
+      <a href="../../processors/i80148/alu-bsu/" class="md-nav__link">
         
   
   
@@ -1130,7 +1239,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/stack-and-interrupts/" class="md-nav__link">
+      <a href="../../processors/i80148/stack-and-interrupts/" class="md-nav__link">
         
   
   
@@ -1218,7 +1327,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/" class="md-nav__link">
+      <a href="../../processors/i8046/" class="md-nav__link">
         
   
   
@@ -1246,7 +1355,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/registers/" class="md-nav__link">
+      <a href="../../processors/i8046/registers/" class="md-nav__link">
         
   
   
@@ -1274,7 +1383,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/instruction-formats/" class="md-nav__link">
+      <a href="../../processors/i8046/instruction-formats/" class="md-nav__link">
         
   
   
@@ -1302,7 +1411,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/instruction-set/" class="md-nav__link">
+      <a href="../../processors/i8046/instruction-set/" class="md-nav__link">
         
   
   
@@ -1330,7 +1439,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/flags/" class="md-nav__link">
+      <a href="../../processors/i8046/flags/" class="md-nav__link">
         
   
   
@@ -1358,7 +1467,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/microcode/" class="md-nav__link">
+      <a href="../../processors/i8046/microcode/" class="md-nav__link">
         
   
   
@@ -1386,7 +1495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/alu-bsu/" class="md-nav__link">
+      <a href="../../processors/i8046/alu-bsu/" class="md-nav__link">
         
   
   
@@ -1481,7 +1590,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/" class="md-nav__link">
+      <a href="../../tools/" class="md-nav__link">
         
   
   
@@ -1561,7 +1670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/casm/" class="md-nav__link">
+      <a href="../../tools/casm/" class="md-nav__link">
         
   
   
@@ -1589,7 +1698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/casm/casm46/" class="md-nav__link">
+      <a href="../../tools/casm/casm46/" class="md-nav__link">
         
   
   
@@ -1617,7 +1726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/casm/casm148/" class="md-nav__link">
+      <a href="../../tools/casm/casm148/" class="md-nav__link">
         
   
   
@@ -1705,7 +1814,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/discasm/" class="md-nav__link">
+      <a href="../../tools/discasm/" class="md-nav__link">
         
   
   
@@ -1733,7 +1842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/discasm/discasm148/" class="md-nav__link">
+      <a href="../../tools/discasm/discasm148/" class="md-nav__link">
         
   
   
@@ -1821,7 +1930,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/link/" class="md-nav__link">
+      <a href="../../tools/link/" class="md-nav__link">
         
   
   
@@ -1849,7 +1958,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/link/link148/" class="md-nav__link">
+      <a href="../../tools/link/link148/" class="md-nav__link">
         
   
   
@@ -1937,7 +2046,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/ar/" class="md-nav__link">
+      <a href="../../tools/ar/" class="md-nav__link">
         
   
   
@@ -1965,7 +2074,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/ar/ar148/" class="md-nav__link">
+      <a href="../../tools/ar/ar148/" class="md-nav__link">
         
   
   
@@ -2060,7 +2169,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/development/contributing/" class="md-nav__link">
+      <a href="../../development/contributing/" class="md-nav__link">
         
   
   
@@ -2105,6 +2214,60 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Формат шины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Протокол карты регистров
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xpb_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Банки XPB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xpb1-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XPB1 - дисковый контроллер
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2117,8 +2280,148 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+<h1 id="xpb">Шина XPB<a class="headerlink" href="#xpb" title="Permanent link">&para;</a></h1>
+<p><strong>XPB</strong> (eXtension Peripheral Bus) - шина расширения для подключения периферийных устройств, не входящих в базовый набор системы. Через неё подключаются дисковые контроллеры, сетевые карты и другие устройства.</p>
+<h2 id="_1">Формат шины<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Шина передаёт данные синхронно по тактовому сигналу.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;- High | Low -&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>X XXXXXXXX XXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXX X
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>^ ╘  PORT  ╛ ││││ ╘ DATA IN (32) ════════════════╛ ╘ DATA OUT (32) ═══════════════╛ ╘CAUSE═╛ ┕RI
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            ┕RD│
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>              ┕WR
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                ┕RE
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                  ┕EN
+</code></pre></div>
+<p><strong>Легенда:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Сигнал</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>^</code></td>
+<td>Тактовый сигнал</td>
+</tr>
+<tr>
+<td><code>PORT</code></td>
+<td>Номер порта (8 бит)</td>
+</tr>
+<tr>
+<td><code>DATA IN</code></td>
+<td>Входные данные (32 бита)</td>
+</tr>
+<tr>
+<td><code>DATA OUT</code></td>
+<td>Выходные данные (32 бита)</td>
+</tr>
+<tr>
+<td><code>CAUSE</code></td>
+<td>Причина прерывания</td>
+</tr>
+<tr>
+<td><code>RI</code></td>
+<td>Request Interrupt</td>
+</tr>
+<tr>
+<td><code>RD</code></td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>WR</code></td>
+<td>Write</td>
+</tr>
+<tr>
+<td><code>RE</code></td>
+<td>Reset</td>
+</tr>
+<tr>
+<td><code>EN</code></td>
+<td>Enable</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_2">Протокол карты регистров<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Каждое XPB-устройство обязано реализовывать базовый набор регистров, называемый <strong>DSR</strong> (Device Service Registers).</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Доступ</th>
+<th>Имя</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>00h</code></td>
+<td>R</td>
+<td><code>DEV_DATA</code></td>
+<td>Класс и производитель устройства</td>
+</tr>
+<tr>
+<td><code>01h</code></td>
+<td>-</td>
+<td>Reserved</td>
+<td>Зарезервировано</td>
+</tr>
+<tr>
+<td><code>02h</code></td>
+<td>R/W</td>
+<td><code>DEV_STATUS</code></td>
+<td>Статус устройства</td>
+</tr>
+<tr>
+<td><code>03h</code></td>
+<td>R</td>
+<td><code>FEATURES</code></td>
+<td>Возможности устройства</td>
+</tr>
+<tr>
+<td><code>04h</code>–<code>07h</code></td>
+<td>-</td>
+<td>Reserved</td>
+<td>Зарезервировано</td>
+</tr>
+<tr>
+<td><code>08h</code>–<code>0Fh</code></td>
+<td>-</td>
+<td><code>DSR</code></td>
+<td>Регистры сервиса устройства</td>
+</tr>
+</tbody>
+</table>
+<p><code>DSR</code> (Device Service Registers) - это 8 регистров, назначение которых определяется самим устройством.</p>
+<h2 id="xpb_1">Банки XPB<a class="headerlink" href="#xpb_1" title="Permanent link">&para;</a></h2>
+<p>Диапазон банков <code>FF00h</code>–<code>FFFFh</code> зарезервирован под XPB-устройства. Каждому устройству соответствует один банк.</p>
+<blockquote>
+<p><strong>Важно:</strong> банк <code>0001h</code> и XPB <code>#01</code> всегда зарезервированы под дисковый контроллер.</p>
+</blockquote>
+<h2 id="xpb1-">XPB1 - дисковый контроллер<a class="headerlink" href="#xpb1-" title="Permanent link">&para;</a></h2>
+<p>Первый XPB-контроллер в системе дисковый. Его регистры находятся по адресам <code>0x00020110</code>–<code>0x0002011C</code>. Полное описание - в разделах <a href="../io-ports/#xpb1--дисковый-контроллер">I/O-порты</a> и <a href="../devices/#дисковый-контроллер-xpb1">Устройства</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -2155,10 +2458,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/IST/", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "content.code.copy"], "search": "/IST/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
     
     
-      <script src="/IST/assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

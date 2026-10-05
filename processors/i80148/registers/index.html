@@ -8,25 +8,31 @@
       
       
       
+        <link rel="canonical" href="https://TheCawa.github.io/IST/processors/i80148/registers/">
       
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../instruction-formats/">
       
       
         
       
       
-      <link rel="icon" href="/IST/assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>IST Documentation</title>
+        <title>Регистры и адресация - IST Documentation</title>
       
     
     
-      <link rel="stylesheet" href="/IST/assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="/IST/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -45,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL("/IST/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -69,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#_1" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -79,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
-    <a href="/IST/." title="IST Documentation" class="md-header__button md-logo" aria-label="IST Documentation" data-md-component="logo">
+    <a href="../../.." title="IST Documentation" class="md-header__button md-logo" aria-label="IST Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -99,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Регистры и адресация
             
           </span>
         </div>
@@ -212,7 +223,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/IST/." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -233,7 +244,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/IST/getting-started/installation/" class="md-tabs__link">
+        <a href="../../../getting-started/installation/" class="md-tabs__link">
           
   
   
@@ -253,7 +264,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/IST/architecture/" class="md-tabs__link">
+        <a href="../../../architecture/" class="md-tabs__link">
           
   
   
@@ -269,11 +280,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="/IST/processors/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
           
   
   
@@ -293,7 +306,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/IST/tools/" class="md-tabs__link">
+        <a href="../../../tools/" class="md-tabs__link">
           
   
   
@@ -313,7 +326,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/IST/development/contributing/" class="md-tabs__link">
+        <a href="../../../development/contributing/" class="md-tabs__link">
           
   
   
@@ -347,7 +360,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/IST/." title="IST Documentation" class="md-nav__button md-logo" aria-label="IST Documentation" data-md-component="logo">
+    <a href="../../.." title="IST Documentation" class="md-nav__button md-logo" aria-label="IST Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -377,7 +390,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -456,7 +469,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/getting-started/installation/" class="md-nav__link">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -484,7 +497,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/getting-started/quick-start/" class="md-nav__link">
+      <a href="../../../getting-started/quick-start/" class="md-nav__link">
         
   
   
@@ -571,7 +584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/" class="md-nav__link">
+      <a href="../../../architecture/" class="md-nav__link">
         
   
   
@@ -599,7 +612,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/overview/" class="md-nav__link">
+      <a href="../../../architecture/overview/" class="md-nav__link">
         
   
   
@@ -627,7 +640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/standards/" class="md-nav__link">
+      <a href="../../../architecture/standards/" class="md-nav__link">
         
   
   
@@ -655,7 +668,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/memory/" class="md-nav__link">
+      <a href="../../../architecture/memory/" class="md-nav__link">
         
   
   
@@ -683,7 +696,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/io-ports/" class="md-nav__link">
+      <a href="../../../architecture/io-ports/" class="md-nav__link">
         
   
   
@@ -711,7 +724,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/xpb/" class="md-nav__link">
+      <a href="../../../architecture/xpb/" class="md-nav__link">
         
   
   
@@ -739,7 +752,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/interrupts/" class="md-nav__link">
+      <a href="../../../architecture/interrupts/" class="md-nav__link">
         
   
   
@@ -767,7 +780,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/architecture/devices/" class="md-nav__link">
+      <a href="../../../architecture/devices/" class="md-nav__link">
         
   
   
@@ -799,26 +812,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -836,7 +854,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -854,7 +872,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/" class="md-nav__link">
+      <a href="../../" class="md-nav__link">
         
   
   
@@ -879,26 +897,31 @@
                 
   
   
+    
   
   
+  
     
     
     
     
       
       
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
         
           
-          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
             
   
   
@@ -916,7 +939,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -934,7 +957,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -959,10 +982,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/IST/processors/i80148/registers/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Регистры и адресация
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -978,6 +1028,109 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Карта регистров
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Карта регистров">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Регистр нуля
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Регистры общего назначения (GPR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Специальные регистры
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABI регистрового файла
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Режимы адресации (Modes)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Таблица соответствия регистров режимам
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -990,7 +1143,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/instruction-formats/" class="md-nav__link">
+      <a href="../instruction-formats/" class="md-nav__link">
         
   
   
@@ -1018,7 +1171,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/instruction-set/" class="md-nav__link">
+      <a href="../instruction-set/" class="md-nav__link">
         
   
   
@@ -1046,7 +1199,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/flags/" class="md-nav__link">
+      <a href="../flags/" class="md-nav__link">
         
   
   
@@ -1074,7 +1227,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/microcode/" class="md-nav__link">
+      <a href="../microcode/" class="md-nav__link">
         
   
   
@@ -1102,7 +1255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/alu-bsu/" class="md-nav__link">
+      <a href="../alu-bsu/" class="md-nav__link">
         
   
   
@@ -1130,7 +1283,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i80148/stack-and-interrupts/" class="md-nav__link">
+      <a href="../stack-and-interrupts/" class="md-nav__link">
         
   
   
@@ -1172,17 +1325,20 @@
       
       
         
+          
+          
+        
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
             
   
   
@@ -1218,7 +1374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/" class="md-nav__link">
+      <a href="../../i8046/" class="md-nav__link">
         
   
   
@@ -1246,7 +1402,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/registers/" class="md-nav__link">
+      <a href="../../i8046/registers/" class="md-nav__link">
         
   
   
@@ -1274,7 +1430,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/instruction-formats/" class="md-nav__link">
+      <a href="../../i8046/instruction-formats/" class="md-nav__link">
         
   
   
@@ -1302,7 +1458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/instruction-set/" class="md-nav__link">
+      <a href="../../i8046/instruction-set/" class="md-nav__link">
         
   
   
@@ -1330,7 +1486,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/flags/" class="md-nav__link">
+      <a href="../../i8046/flags/" class="md-nav__link">
         
   
   
@@ -1358,7 +1514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/microcode/" class="md-nav__link">
+      <a href="../../i8046/microcode/" class="md-nav__link">
         
   
   
@@ -1386,7 +1542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/processors/i8046/alu-bsu/" class="md-nav__link">
+      <a href="../../i8046/alu-bsu/" class="md-nav__link">
         
   
   
@@ -1481,7 +1637,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/" class="md-nav__link">
+      <a href="../../../tools/" class="md-nav__link">
         
   
   
@@ -1561,7 +1717,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/casm/" class="md-nav__link">
+      <a href="../../../tools/casm/" class="md-nav__link">
         
   
   
@@ -1589,7 +1745,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/casm/casm46/" class="md-nav__link">
+      <a href="../../../tools/casm/casm46/" class="md-nav__link">
         
   
   
@@ -1617,7 +1773,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/casm/casm148/" class="md-nav__link">
+      <a href="../../../tools/casm/casm148/" class="md-nav__link">
         
   
   
@@ -1705,7 +1861,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/discasm/" class="md-nav__link">
+      <a href="../../../tools/discasm/" class="md-nav__link">
         
   
   
@@ -1733,7 +1889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/discasm/discasm148/" class="md-nav__link">
+      <a href="../../../tools/discasm/discasm148/" class="md-nav__link">
         
   
   
@@ -1821,7 +1977,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/link/" class="md-nav__link">
+      <a href="../../../tools/link/" class="md-nav__link">
         
   
   
@@ -1849,7 +2005,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/link/link148/" class="md-nav__link">
+      <a href="../../../tools/link/link148/" class="md-nav__link">
         
   
   
@@ -1937,7 +2093,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/ar/" class="md-nav__link">
+      <a href="../../../tools/ar/" class="md-nav__link">
         
   
   
@@ -1965,7 +2121,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/tools/ar/ar148/" class="md-nav__link">
+      <a href="../../../tools/ar/ar148/" class="md-nav__link">
         
   
   
@@ -2060,7 +2216,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/IST/development/contributing/" class="md-nav__link">
+      <a href="../../../development/contributing/" class="md-nav__link">
         
   
   
@@ -2105,6 +2261,99 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Карта регистров
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Карта регистров">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Регистр нуля
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Регистры общего назначения (GPR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Специальные регистры
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABI регистрового файла
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Режимы адресации (Modes)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Таблица соответствия регистров режимам
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2117,8 +2366,300 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+<h1 id="_1">Регистры и адресация<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="_2">Карта регистров<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Регистровое пространство I80148 содержит <strong>36 регистров</strong> и адресуется 6-битным полем (<code>00h</code>–<code>24h</code>).</p>
+<h3 id="_3">Регистр нуля<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Адрес</th>
+<th>Имя</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>00h</code></td>
+<td><code>r0</code></td>
+<td>Всегда равен нулю</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gpr">Регистры общего назначения (GPR)<a class="headerlink" href="#gpr" title="Permanent link">&para;</a></h3>
+<p>Три набора по 7 регистров, каждый набор имеет свою разрядность:</p>
+<table>
+<thead>
+<tr>
+<th>Адрес</th>
+<th>Имя</th>
+<th>Разрядность</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>01h</code>–<code>07h</code></td>
+<td><code>EX1</code>–<code>EX7</code></td>
+<td>Dword (32 бита)</td>
+<td>Расширенные регистры</td>
+</tr>
+<tr>
+<td><code>08h</code>–<code>0Eh</code></td>
+<td><code>X1</code>–<code>X7</code></td>
+<td>Word (16 бит)</td>
+<td>Регистры слова</td>
+</tr>
+<tr>
+<td><code>0Fh</code>–<code>15h</code></td>
+<td><code>XL1</code>–<code>XL7</code></td>
+<td>Byte (8 бит)</td>
+<td>Регистры байта</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_4">Специальные регистры<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Адрес</th>
+<th>Имя</th>
+<th>Разрядность</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>16h</code></td>
+<td><code>IC</code></td>
+<td>Dword</td>
+<td>Счётчик инструкций (Instruction Counter)</td>
+</tr>
+<tr>
+<td><code>17h</code></td>
+<td><code>FL</code></td>
+<td>Byte</td>
+<td>Регистр флагов (Flags)</td>
+</tr>
+<tr>
+<td><code>18h</code></td>
+<td><code>SP</code></td>
+<td>Dword</td>
+<td>Указатель стека (Stack Pointer)</td>
+</tr>
+<tr>
+<td><code>19h</code></td>
+<td><code>BP</code></td>
+<td>Dword</td>
+<td>Указатель базы (Base Pointer)</td>
+</tr>
+<tr>
+<td><code>1Ah</code></td>
+<td><code>IX</code></td>
+<td>Dword</td>
+<td>Индексный регистр-источник (Source Index)</td>
+</tr>
+<tr>
+<td><code>1Bh</code></td>
+<td><code>IY</code></td>
+<td>Dword</td>
+<td>Индексный регистр-приёмник (Destination Index)</td>
+</tr>
+<tr>
+<td><code>1Ch</code>–<code>23h</code></td>
+<td><code>A0</code>–<code>A7</code></td>
+<td>Dword</td>
+<td>Адресные регистры (могут использоваться как GPR)</td>
+</tr>
+<tr>
+<td><code>24h</code></td>
+<td><code>IDTR</code></td>
+<td>Dword</td>
+<td>Регистр таблицы дескрипторов прерываний</td>
+</tr>
+</tbody>
+</table>
+<h3 id="abi">ABI регистрового файла<a class="headerlink" href="#abi" title="Permanent link">&para;</a></h3>
+<p>С точки зрения АЛУ и внутренней логики, регистры распределены по ролям:</p>
+<table>
+<thead>
+<tr>
+<th>Роль</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td><code>ALU_A</code>, вход данных (<code>DATA_OUT</code>)</td>
+</tr>
+<tr>
+<td><code>B</code></td>
+<td><code>ALU_B</code>, источник адреса (<code>SRC_ADDR</code>)</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>Источник адреса (<code>SRC_ADDR</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="modes">Режимы адресации (Modes)<a class="headerlink" href="#modes" title="Permanent link">&para;</a></h2>
+<p>Поле <code>SF</code> в инструкциях задаёт режим доступа к памяти. Каждый режим определяет, какие линии памяти (<code>LE0</code>–<code>LE3</code>) активны.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>BIN</th>
+<th>Имя</th>
+<th>LE0</th>
+<th>LE1</th>
+<th>LE2</th>
+<th>LE3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>00h</code></td>
+<td><code>0000</code></td>
+<td>Byte</td>
+<td>n</td>
+<td>n</td>
+<td>n</td>
+<td>y</td>
+</tr>
+<tr>
+<td><code>01h</code></td>
+<td><code>0001</code></td>
+<td>Word</td>
+<td>n</td>
+<td>n</td>
+<td>y</td>
+<td>y</td>
+</tr>
+<tr>
+<td><code>02h</code></td>
+<td><code>0010</code></td>
+<td>Dword</td>
+<td>y</td>
+<td>y</td>
+<td>y</td>
+<td>y</td>
+</tr>
+<tr>
+<td><code>03h</code></td>
+<td><code>0011</code></td>
+<td>Qword X</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr>
+<td><code>04h</code></td>
+<td><code>0100</code></td>
+<td>REG</td>
+<td>?</td>
+<td>?</td>
+<td>?</td>
+<td>?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Легенда:</strong>
+- <code>LEn</code> - линия памяти (Memory Line Enable).
+- <code>n</code> - не активна.
+- <code>y</code> - активна.
+- <code>x</code> - не реализовано.
+- <code>?</code> - зависит от конкретного режима.</p>
+<p>Режим <code>REG</code> (<code>04h</code>) - это <strong>look-up таблица</strong>: значение <code>SF</code> определяет, каким режимом на самом деле пользоваться, исходя из того, какой регистр указан в инструкции.</p>
+<h2 id="_5">Таблица соответствия регистров режимам<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>Когда в инструкции указан режим <code>REG</code>, реальный режим доступа определяется по таблице:</p>
+<table>
+<thead>
+<tr>
+<th>Диапазон ID</th>
+<th>Регистры</th>
+<th>Режим</th>
+<th>Единица</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>01h</code>–<code>07h</code></td>
+<td>EX1–EX7</td>
+<td><code>02h</code></td>
+<td>Dword</td>
+</tr>
+<tr>
+<td><code>08h</code>–<code>0Eh</code></td>
+<td>X1–X7</td>
+<td><code>01h</code></td>
+<td>Word</td>
+</tr>
+<tr>
+<td><code>0Fh</code>–<code>15h</code></td>
+<td>XL1–XL7</td>
+<td><code>00h</code></td>
+<td>Byte</td>
+</tr>
+<tr>
+<td><code>16h</code></td>
+<td>IC</td>
+<td><code>02h</code></td>
+<td>Dword</td>
+</tr>
+<tr>
+<td><code>17h</code></td>
+<td>FL</td>
+<td><code>00h</code></td>
+<td>Byte</td>
+</tr>
+<tr>
+<td><code>18h</code></td>
+<td>SP</td>
+<td><code>02h</code></td>
+<td>Dword</td>
+</tr>
+<tr>
+<td><code>19h</code></td>
+<td>BP</td>
+<td><code>02h</code></td>
+<td>Dword</td>
+</tr>
+<tr>
+<td><code>1Ah</code>–<code>1Bh</code></td>
+<td>IX–IY</td>
+<td><code>02h</code></td>
+<td>Dword</td>
+</tr>
+<tr>
+<td><code>1Ch</code>–<code>23h</code></td>
+<td>A0–A7</td>
+<td><code>02h</code></td>
+<td>Dword</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -2155,10 +2696,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/IST/", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "content.code.copy"], "search": "/IST/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
     
     
-      <script src="/IST/assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
