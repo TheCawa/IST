@@ -227,7 +227,7 @@ Labels:
 
 
 Example:
-		.ORG 0x00050000
+		.ORG 0x00060000
 		.text
 	main:
 		LDI.DW SP, 0x00080000

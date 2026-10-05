@@ -101,7 +101,7 @@ Example linker script:
 
 	SECTIONS
 	{
-		. = 0x00050000;
+		. = 0x00060000;
 		.text : { *(.text) }
 		.data : { *(.data) }
 		.bss : { *(.bss) }
@@ -134,9 +134,9 @@ Entry point:
 Example:
 	$ python LINK148.py startup.o main.o libio.a -o program.bin --entry _start
 	Linked 1024 bytes
-	Sections: text=0x00050000 (512 bytes), data=0x00050200 (256 bytes), bss=0x00050300 (256 bytes)
+	Sections: text=0x00060000 (512 bytes), data=0x00060200 (256 bytes), bss=0x00060300 (256 bytes)
 	Global symbols: {_START, _DATA_START, _DATA_END, _BSS_START, _BSS_END, _END}
-	Entry point: _START = 0x00050000
+	Entry point: _START = 0x00060000
 	Written: program.bin and program.hex
 
 

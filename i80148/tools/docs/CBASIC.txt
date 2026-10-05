@@ -152,7 +152,7 @@ Built-in functions:
 
 
 Runtime environment:
-	-# Generated programs are assembled at .ORG 0x00050000 (user RAM).
+	-# Generated programs are assembled at .ORG 0x00060000 (user RAM).
 	-# Stack pointer is initialized to 0x00080000.
 	-# Base pointer BP is used for subroutine frames.
 	-# Runtime routines provided by cbasic_codegen.py:
@@ -165,7 +165,7 @@ Runtime environment:
 
 Memory layout of generated code:
 	#Region                 - #Address
-	Code (.text)            - 0x00050000
+	Code (.text)            - 0x00060000
 	Variables / strings     - immediately after code (.data)
 	Stack                   - grows down from 0x00080000
 

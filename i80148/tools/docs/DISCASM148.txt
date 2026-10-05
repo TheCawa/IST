@@ -51,7 +51,7 @@ Output conventions:
 
 
 Example:
-	$ python DISCASM148.py program.hex --org 0x00050000 -o program.asm
+	$ python DISCASM148.py program.hex --org 0x00060000 -o program.asm
 	Loaded 256 bytes from program.hex
 	Written: program.asm
 	Labels found: 4
