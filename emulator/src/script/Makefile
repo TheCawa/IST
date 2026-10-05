@@ -17,7 +17,7 @@ CC      = gcc
 CXX     = g++
 CFLAGS  = -Wall -Wextra -std=c11 -I$(SRC_DIR)/include -I"$(SDL_INC_PATH)"
 CXXFLAGS= -Wall -Wextra -std=c++17 -I$(SRC_DIR)/include -I"$(SDL_INC_PATH)"
-LDFLAGS = -L"$(SDL_LIB_PATH)" -lmingw32 -lSDL2main -lSDL2 -lcomdlg32
+LDFLAGS = -L"$(SDL_LIB_PATH)" -lmingw32 -lSDL2main -lSDL2 -lcomdlg32 -static-libgcc -static-libstdc++
 
 TARGET_NAME = emulator.exe
 TARGET      = $(DIST_DIR)/$(TARGET_NAME)
