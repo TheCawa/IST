@@ -447,7 +447,7 @@ static uint32_t disk_read_dword(Cpu* cpu, uint32_t addr) {
 
 static uint8_t kbd_read_ascii(Cpu* cpu) {
     if (cpu->kbd_buffer_pos >= cpu->kbd_buffer_len) {
-        // In GUI mode, don't block on stdin — return 0 if no key is ready.
+        // In GUI mode, don't block on stdin - return 0 if no key is ready.
         if (cpu->gui_mode) {
             return 0;
         }

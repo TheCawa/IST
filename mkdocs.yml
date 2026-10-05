@@ -1,0 +1,84 @@
+site_name: IST Documentation
+site_url: https://TheCawa.github.io/IST/
+repo_url: https://github.com/TheCawa/IST
+theme:
+  name: material
+  language: ru
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - search.suggest
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - toc:
+      permalink: true
+
+nav:
+  - Главная: index.md
+  - Начало работы:
+    - Установка: getting-started/installation.md
+    - Быстрый старт: getting-started/quick-start.md
+  - Архитектура:
+    - Обзор: architecture/index.md
+    - Система: architecture/overview.md
+    - Стандарты: architecture/standards.md
+    - Карта памяти: architecture/memory.md
+    - I/O-порты: architecture/io-ports.md
+    - Шина XPB: architecture/xpb.md
+    - Прерывания: architecture/interrupts.md
+    - Устройства: architecture/devices.md
+  - Процессоры:
+    - Обзор: processors/index.md
+    - I80148:
+      - Обзор: processors/i80148/index.md
+      - Регистры и адресация: processors/i80148/registers.md
+      - Форматы инструкций: processors/i80148/instruction-formats.md
+      - Система команд: processors/i80148/instruction-set.md
+      - Флаги и условия: processors/i80148/flags.md
+      - Микрокод и PLA: processors/i80148/microcode.md
+      - ALU и BSU: processors/i80148/alu-bsu.md
+      - Стек и прерывания: processors/i80148/stack-and-interrupts.md
+    - I8046:
+      - Обзор: processors/i8046/index.md
+      - Регистры и адресация: processors/i8046/registers.md
+      - Форматы инструкций: processors/i8046/instruction-formats.md
+      - Система команд: processors/i8046/instruction-set.md
+      - Флаги и условия: processors/i8046/flags.md
+      - Микрокод и PLA: processors/i8046/microcode.md
+      - ALU и BSU: processors/i8046/alu-bsu.md
+  - Инструменты:
+    - Обзор: tools/index.md
+    - CASM:
+      - Обзор: tools/casm/index.md
+      - CASM46: tools/casm/casm46.md
+      - CASM148: tools/casm/casm148.md
+    - DISCASM:
+      - Обзор: tools/discasm/index.md
+      - DISCASM148: tools/discasm/discasm148.md
+    - LINK:
+      - Обзор: tools/link/index.md
+      - LINK148: tools/link/link148.md
+    - AR:
+      - Обзор: tools/ar/index.md
+      - AR148: tools/ar/ar148.md
+  - Разработка:
+    - Как помочь проекту: development/contributing.md

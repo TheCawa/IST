@@ -244,7 +244,7 @@ class CodeGenerator:
         start_expr = node.children[1]
         end_expr = node.children[2]
 
-        # Найдём for_blk и, если он находится на индексе 4, предыдущий узел — STEP.
+        # Найдём for_blk и, если он находится на индексе 4, предыдущий узел - STEP.
         # Важно: из-за inline-правил (?expr) step-выражение может быть не Tree('expr'),
         # а int_lit/additive/etc., поэтому определяем его положение относительно for_blk.
         blk_idx = None

@@ -44,7 +44,7 @@ main:
   LDI.dw     EX3, 0x00000001	; Amount of LBA
   LDI.dw     EX7, 0x00000002	; Read sector
   STR.dw     EX7, [0x00020111]
-  ; Загружаем до 4096 байт (1024 dword) с диска — хватает для CBASIC-демо.
+  ; Загружаем до 4096 байт (1024 dword) с диска - хватает для CBASIC-демо.
   LDI.w 	 X4, 0x0400
   CALL 		 rd_disk
   

@@ -133,7 +133,7 @@ class SemanticAnalyzer:
             if isinstance(child, Token) and child.type == 'IDENTIFIER':
                 if child.value == sub_name and not params_started:
                     continue  # пропускаем имя SUB
-                # Все остальные IDENTIFIER до первого Tree — параметры
+                # Все остальные IDENTIFIER до первого Tree - параметры
                 params_started = True
                 try:
                     self.symtab.define(child.value, Symbol(child.value, TYPE_INTEGER, 'PARAM'))

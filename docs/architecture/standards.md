@@ -1,0 +1,86 @@
+# Стандарты
+
+##  В разработке...
+
+На данный момент существует сырой файл `Standards.txt`
+
+```text
+
+ ========================================
+  BIOS STANDARD
+ ========================================
+ 
+ Calls and interupts
+ -------------------
+ IRQ:
+	0x00 	  - #DE (Divide by zero)
+	0x01 	  - #DB (Debug)
+	0x02 	  - #BP (Breakpoint)
+	0x03	  - #OF (Overflow)
+	0x04	  - #UO (Unknown opcode)
+	0x05-0x1F - Reserved
+	---------
+	0x20	  - Timer
+	0x21	  - Disk
+	0x22	  - GPU
+	0x23	  - Keyboard
+	0x24	  - Mouse
+	0x25	  - Audio
+	0x26	  - Network
+	0x27	  - XPB-IRQ
+	
+ Interupts:
+ -#	EX1 - func; EX2 - arg1; EX3 - arg2; EX4 - arg3
+ 
+	0x49	  - KBD-INT
+	0x50	  - Video services
+		 0x00 - Set video mode
+		 0x01 - Set cursor shape
+	����� ������, ����.
+	
+	
+ Calls:
+ -# Example (read sector):
+ -# 	LDI.dw IX, 0x00060400 	; dest
+ -# 	LDI.dw EX2, 1 	; #1 sector
+ -#		LDI.dw EX3, 8 	; 8 sectors
+ -#		LOD.dw A1, [0x000300104] ; rd_disk
+ -#		CALLR A1
+ 
+	0x00030104 - Read disk (IX - dest; EX2 - LBA ptr; EX3 - LBA ctr)
+	0x00030108 - Write disk (IX - src; EX2 - LBA ptr; EX3 - LBA ctr)
+	0x0004FC00 - Video service (EX1 - func; EX2 - arg1; EX3 - arg2; EX4 - arg3)
+	0x0004FC04 - Disk services (EX1 - func; IX - dest/src; EX2 - LBA ptr; EX3 - LBA ctr)
+	0x0004FC08 - Serial port services
+	0x0004FC0C - Parallel port services
+	0x0004FC10 - Kbd services
+	0x0004FC14 - XPB services
+	0x0004FC18-0x0004FDFC - Reserved
+	0x0004FE00-0x0004FFFC - System calls
+	
+ BOOTLOAD
+ --------
+ BIOS load 1 sector (1024b) in memory (0x00060000)
+ 
+ SCROLL=OFF
+ CURSOR=OFF
+ VC_MODE=0x00 (80x25; 16 colors)
+ TERM_ATTR=0x07
+ 
+CASM148:
+	PUSH EX1
+	PUSH A7
+	LDI.dw A7, 0x00020019
+	LDI.b XL1, 0x01
+	STR.b XL1, [A7]
+	STR.b R0, [A7+1]
+	LDI.b XL1, 0x07
+	STR.b XL1, [A7+2]
+	LDI.b XL1, 0x03
+	STR.b XL1, [A7]
+	LDI.b XL1, 0x05
+	STR.b XL1, [A7]
+	POP A7
+	POP EX1
+    
+```

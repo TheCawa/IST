@@ -22,7 +22,7 @@ loop:
     CMP.B XL1, 8              ; BACKSPACE
     JMP.EQ handle_backspace
 
-    ; Обычный символ — выводим.
+    ; Обычный символ - выводим.
     STR.B XL1, [0x00020018]
     JMA loop
 

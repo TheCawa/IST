@@ -168,7 +168,7 @@ uint64_t cpu_read_mem(const Cpu *cpu, uint32_t addr, CpuMode mode) {
     size_t bytes = (mode == MODE_ADDR) ? 3 : (1 << mode);
     if (bytes > 8) bytes = 8;
     
-    // Big-endian: первый байт в памяти — самый старший
+    // Big-endian: первый байт в памяти - самый старший
     for (size_t i = 0; i < bytes; i++) {
         val |= ((uint64_t)cpu->mem[aligned_addr + i]) << ((bytes - 1 - i) * 8);
     }

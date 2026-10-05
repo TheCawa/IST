@@ -6,3 +6,4 @@ i80148/tools/CBASIC/__pycache__/
 __pycache__/
 *.pyc
 .freebuff/
+site/
