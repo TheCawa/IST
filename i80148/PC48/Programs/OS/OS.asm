@@ -2,6 +2,11 @@
 .text
 
 start:
+	LDI.dw IX, 0x00060400
+	LDI.dw EX2, 1
+	LDI.dw EX3, 8
+	LOD.dw A1, [0x00030104]
+	CALLR A1
     LDI.B XL1, 0x01
     STR.B XL1, [0x00020019]
     LDI.DW IX, msg_welcome
