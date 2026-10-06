@@ -75,3 +75,34 @@ CASM148:
 	STR.b XL1, [A7]
 	POP A7
 	POP EX1
+	
+ CMOS
+ ----
+ 0x00010000-0x000103FF (1024b; 4 bytes per vector; 256 vectors) - IDT (Interupt descriptor table)
+ 0x00010400-0x000107FF (1024b; 4 bytes per vector; 256 vectors) - DLT (Device list table)
+ 0x00010800-0x00010DFF (1024b; 8 bytes per vector; 128 vectors) - DDL (Disk Drive list)
+ 0x00010C00-0x0001FFFF (62464b) - BIOS settings
+ 
+ 
+ IDT vector: bytes 3-0 = service address
+ DLT vector: byte #0 = Flags, byte #1 = Device class (Did), byte #2 = Vendor ID (Vid), byte #3 = ?
+ DDL vector: bytes 3-0 = disk capacity (in sectors), byte #4 = Flags, bytes 5-7 = Reserved
+ 
+ BIOS Settings (Example: FBIOS):
+	-# Addr = Base:Offset
+	-# Base = 0x00010C00
+	
+	Offset - Ending - Length - Type   - Name
+	
+	0x0000 - 0x001F - 32b	 - string - BIOS Password
+	0x0020 - 0x0023 - 4b	 - bitmap - BIOS Parameters
+	
+ Loading & Saving CMOS
+ ---------------------
+ When you enter in setup: Copy memory block from 0x00010C00 to 0x00040080 
+	(Number of bytes = Size of your CMOS settings; For example, it's 36 bytes for FBIOS (32 bytes = password; 4 bytes = parameters)
+	(While you change parameters, they save in 0x0004080 area, and it flush to 0x00010C00 only when you save changes and exit from setup)
+ 
+ When you exit setup with saving: Copy memory block from 0x00040080 to 0x00010C00
+	(Number of bytes = Size of your CMOS settings; For example, it's 36 bytes for FBIOS (32 bytes = password; 4 bytes = parameters)]
+	
