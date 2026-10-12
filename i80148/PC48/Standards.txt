@@ -26,10 +26,17 @@
  -#	EX1 - func; EX2 - arg1; EX3 - arg2; EX4 - arg3
  
 	0x49	  - KBD-INT
+	
 	0x50	  - Video services
 		 0x00 - Set video mode
 		 0x01 - Set cursor shape
-	Потом допишу, лень.
+		 
+	0x51	  - Disk services
+		 0x00 - Get disk parameters
+		 0x01 - Read sector
+		 0x02 - Write sector
+		 
+	!!! Not done yet !!!
 	
 	
  Calls:
@@ -61,6 +68,8 @@
  TERM_ATTR=0x07
  
 CASM148:
+	CLI
+	LDI.dw BP, 0xB007AB1E
 	PUSH EX1
 	PUSH A7
 	LDI.dw A7, 0x00020019
@@ -96,13 +105,34 @@ CASM148:
 	
 	0x0000 - 0x001F - 32b	 - string - BIOS Password
 	0x0020 - 0x0023 - 4b	 - bitmap - BIOS Parameters
+	0x0024 - 0x0033 - 16b	 - uint8  - Boot sequence
 	
  Loading & Saving CMOS
  ---------------------
  When you enter in setup: Copy memory block from 0x00010C00 to 0x00040080 
-	(Number of bytes = Size of your CMOS settings; For example, it's 36 bytes for FBIOS (32 bytes = password; 4 bytes = parameters)
+	(Number of bytes = Size of your CMOS settings; For example, it's 44 bytes for FBIOS: 32 bytes = password; 4 bytes = parameters; 16 bytes = boot sequence)
 	(While you change parameters, they save in 0x0004080 area, and it flush to 0x00010C00 only when you save changes and exit from setup)
  
  When you exit setup with saving: Copy memory block from 0x00040080 to 0x00010C00
-	(Number of bytes = Size of your CMOS settings; For example, it's 36 bytes for FBIOS (32 bytes = password; 4 bytes = parameters)]
+	(Number of bytes = Size of your CMOS settings; For example, it's 36 bytes for FBIOS: 32 bytes = password; 4 bytes = parameters; 8 bytes = boot sequence)
 	
+
+ BIOS BOOT SIGNATYRE
+ -------------------
+	27 21 03 19 B0 07 AB 1E
+	
+ Insert these 8 bytes at the very beginning (sector 0) of the disk to designate it as bootable.
+ The first 4 bytes (27 21 03 19) are used by the BIOS to verify the disk's compatibility 
+ with the i48 instruction set (hereinafter referred to as "Architectural Verification"). 
+ 
+ The next 4 bytes (B0 07 AB 1E) represent a magic constant used by the BIOS to determine 
+ whether the disk is bootable.
+ 
+ Additionally, ensure that the BIOS Setup Utility provides options to enable or disable each verification stage independently.
+ For instance, a user should be able to disable Architectural Verification (useful for executing legacy code) or bypass the magic constant check.
+
+ .p.s. 0xB007AB1E also can read as "BOOTABLE"
+ 
+ Also you can paste this 8 bytes as assembly code:
+	CLI
+	LDI.dw BP, 0xB007AB1E
