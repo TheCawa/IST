@@ -329,6 +329,12 @@ find_disk_l:
 	AND EX2, EX5
 	CMP.b XL2, 0x01
 	JMP.NE find_disk_skip0
+	LOD.dw IX, [0x00010C20]
+	LDI.dw A6, 0x00060000
+	LDI.dw IY, 0x00000030
+	AND IX, IY
+	CMP IX, IY
+	JMP.EQ find_disk_end
 	
 	COPY IX, A6
 	XOR EX2, EX2
@@ -919,6 +925,34 @@ show_advanced_ncosmetics:
 	
 show_boot:
 	CALL draw_lr
+	; LDI.b XL1, 1
+	STR.dw R0, [0x0004000C] ; 1 row maximum
+	CALL set_cursor
+	LOD.dw A7, [0x00040004]
+	
+	; CMP A7, R0
+	; JMP.NE show_boot_nss
+	; LDI.b XL2, 0x7F
+	; STR.b XL2, [0x0002001B]
+; show_boot_nss:
+	; LDI.dw IX, boot_setseq
+	; CALL print
+	; LDI.b XL2, 0x71
+	; STR.b XL2, [0x0002001B]
+	; CALL b_rxiy
+	CMP.b A7, 0x00
+	JMP.NE show_boot_nbarch
+	LDI.b XL2, 0x7F
+	STR.b XL2, [0x0002001B]
+show_boot_nbarch:
+	LDI.dw IX, boot_bysign
+	CALL print
+	LOD.dw EX1, [0x000400A0]
+	COPY EX2, R0
+	LDI.b XL2, 4
+	CALL chks_status
+	LDI.b XL2, 0x71
+	STR.b XL2, [0x0002001B]
 	JMP setup_wait_key
 	
 show_security:
@@ -1139,7 +1173,17 @@ eh_advanced_func1:
 	JMP setup_cat_redraw
 	
 eh_boot:
+	LDI.dw A7, 0x00040000
+	CMP.b XL2, 0x00
+	JMP.EQ eh_boot_func0
+	CMP.b XL2, 0x01
+	JMP.EQ eh_boot_func1
 	JMP setup_wait_key
+
+eh_boot_func0:
+	LDI.dw EX1, 0x00000030
+	CALL bit_mask
+	JMP setup_cat_redraw
 
 eh_security:
 	CMP.b XL2, 0x00
