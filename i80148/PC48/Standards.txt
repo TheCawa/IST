@@ -126,10 +126,7 @@ CASM148:
  whether the disk is bootable.
  
  The next 4 bytes (XX XX XX XX) are reserved for disk signatures, like FS, OS or bootloader
- 
- Additionally, ensure that the BIOS Setup Utility provides options to enable or disable each verification stage independently.
- For instance, a user should be able to disable the bootable signature check.
- 
- BIOS must jump to 0x00060008
 
- .p.s. 0xB007AB1E also can read as "BOOTABLE"
+ BIOS must jump to 0x00060008!
+
+ .p.s. 0xB007AB1E in hexspeak means "BOOTABLE"
