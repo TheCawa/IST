@@ -10,7 +10,7 @@ init:
 	STR.b XL1, [IX]
 	LDI.b XL1, 0x07
 	STR.b XL1, [IX+2]
-	; LDI.b XL1, 0x12 ; Graphic mode
+	; LDI.b XL1, 0x10 ; Graphic mode
 	STR.b R0, [IX+1]
 	LDI.b XL1, 0x01
 	STR.b XL1, [IX]
@@ -299,7 +299,7 @@ cbios_delay:
 	JMP.GR cbios_delay
 	LDI.b XL1, 0x01
 	STR.B XL1, [0x00020019]
-	JMA 0x00060000
+	JMA 0x00060008
 	
 disk_read_error:
 	; LDI.b XL1, 0x0A
@@ -328,7 +328,27 @@ find_disk_l:
 	LDI.dw EX5, 0x000000FF
 	AND EX2, EX5
 	CMP.b XL2, 0x01
+	JMP.NE find_disk_skip0
+	LOD.dw IX, [0x00010C20]
+	LDI.dw A6, 0x00060000
+	LDI.dw IY, 0x00000030
+	AND IX, IY
+	CMP IX, IY
 	JMP.EQ find_disk_end
+	
+	COPY IX, A6
+	XOR EX2, EX2
+	XOR EX3, EX3
+	INC EX3
+	LOD.dw A1, [0x00030104]
+	CALLR A1
+	
+	LOD.dw EX1, [A6]
+	CMP.dw EX1, 0xB007AB1E
+	JMP.NE find_disk_skip0
+	JMP find_disk_end
+	
+find_disk_skip0:
 	INC EX3
 	CMP.b XL3, 3
 	JMP.GR disk_not_found
@@ -460,6 +480,15 @@ mt_decout:
 	RET
 	
 rd_disk:
+	PUSH FL
+	PUSH A0
+	PUSH A1
+	PUSH A7
+	PUSH EX5
+	PUSH EX7
+	PUSH EX4
+	PUSH EX6
+	PUSH EX1
 	LDI.dw A1, 0x00020111
 	XOR A7, A7
 	XOR A0, A0
@@ -498,16 +527,33 @@ rd_disk_rdata:
 	LDI.dw EX4, 256
 	ADD IX, A0
 	XOR A0, A0
+	XOR A7, A7
 	INC EX2
 	DEC EX3
 	JMP.NZ rd_disk_l
 	COPY EX1, R0
-	CALL clr_gpr
+	POP EX1
+	POP EX6
+	POP EX4
+	POP EX7
+	POP EX5
+	POP A7
+	POP A1
+	POP A0
+	POP FL
 	RET
 
 wr_disk:
+	PUSH FL
+	PUSH A0
+	PUSH A1
+	PUSH A7
+	PUSH EX5
+	PUSH EX7
+	PUSH EX4
+	PUSH EX6
+	PUSH EX1
 	XOR A7, A7
-	; LDI.dw A7, 0xFFFFFFFC
 	XOR EX7, EX7
 	LDI.dw A1, 0x00020111
 	LDI.w X4, 256
@@ -524,7 +570,6 @@ wr_disk_wrdata:
 	XOR EX7, EX7
 	STR.dw EX7, [A1]
 	ADD.dw A7, 4
-	; STR.dw A7, [0x0002011C]
 	ADD.dw A0, 4
 	DEC EX4
 	JMP.NZ wr_disk_wrdata
@@ -556,7 +601,15 @@ wr_disk_ready:
 	DEC EX3
 	JMP.NZ wr_disk_loop
 wr_disk_success:
-	CALL clr_gpr
+	POP EX1
+	POP EX6
+	POP EX4
+	POP EX7
+	POP EX5
+	POP A7
+	POP A1
+	POP A0
+	POP FL
 	STR.dw R0, [0x0002011C]
     RET
 	
@@ -623,7 +676,7 @@ setup_utility:
 	
 	LDI.dw IX, 0x00010C00
 	LDI.dw IY, 0x00040080
-	LDI.dw A0, 36
+	LDI.dw A0, 52
 	CALL copy_block
 	
 	PUSH EX1
@@ -872,10 +925,34 @@ show_advanced_ncosmetics:
 	
 show_boot:
 	CALL draw_lr
-	STR.dw R0, [0x0004000C] ; 0 rows maximum
+	; LDI.b XL1, 1
+	STR.dw R0, [0x0004000C] ; 1 row maximum
 	CALL set_cursor
-	LDI.dw IX, boot_menu_empty
+	LOD.dw A7, [0x00040004]
+	
+	; CMP A7, R0
+	; JMP.NE show_boot_nss
+	; LDI.b XL2, 0x7F
+	; STR.b XL2, [0x0002001B]
+; show_boot_nss:
+	; LDI.dw IX, boot_setseq
+	; CALL print
+	; LDI.b XL2, 0x71
+	; STR.b XL2, [0x0002001B]
+	; CALL b_rxiy
+	CMP.b A7, 0x00
+	JMP.NE show_boot_nbarch
+	LDI.b XL2, 0x7F
+	STR.b XL2, [0x0002001B]
+show_boot_nbarch:
+	LDI.dw IX, boot_bysign
 	CALL print
+	LOD.dw EX1, [0x000400A0]
+	COPY EX2, R0
+	LDI.b XL2, 4
+	CALL chks_status
+	LDI.b XL2, 0x71
+	STR.b XL2, [0x0002001B]
 	JMP setup_wait_key
 	
 show_security:
@@ -996,8 +1073,6 @@ chks_status_disable:
 	LDI.dw IX, bios_disable
 	CALL print
 chks_status_end:
-	LDI.b XL1, 0x5D
-	STR.b XL1, [0x00020018]
 	POP EX3
 	RET
 
@@ -1086,40 +1161,31 @@ enter_handler:
 eh_main:
 	JMP setup_wait_key
 eh_advanced:
-	; LDI.dw IX, 0x000400A0
 	LDI.dw A7, 0x00040000
 	CMP.b XL2, 0x00
 	JMP.EQ eh_advanced_func0
 	CMP.b XL2, 0x01
 	JMP.EQ eh_advanced_func1
-	; CMP.b XL2, 0x02
-	; JMP.EQ eh_advanced_func2
-	; CMP.b XL2, 0x03
-	; JMP.EQ eh_advanced_func3
 	JMP setup_cat_redraw
 eh_advanced_func0:
 	CALL rdump_dialog
 eh_advanced_func1:
 	JMP setup_cat_redraw
-; eh_advanced_func2:
-	; LOD.dw EX1, [A7+160]
-	; XOR EX2, EX2
-	; INC EX2
-	; CALL switch_bit
-	; STR.dw EX1, [A7+160]
-	; JMP setup_cat_redraw
-; eh_advanced_func3:
-	; LOD.dw EX1, [A7+160]
-	; LDI.dw EX2, 2
-	; CALL switch_bit
-	; STR.dw EX1, [A7+160]
-	; JMP setup_cat_redraw
 	
 eh_boot:
+	LDI.dw A7, 0x00040000
+	CMP.b XL2, 0x00
+	JMP.EQ eh_boot_func0
+	CMP.b XL2, 0x01
+	JMP.EQ eh_boot_func1
 	JMP setup_wait_key
-	
+
+eh_boot_func0:
+	LDI.dw EX1, 0x00000030
+	CALL bit_mask
+	JMP setup_cat_redraw
+
 eh_security:
-	LDI.dw A7, 0x000400A0
 	CMP.b XL2, 0x00
 	JMP.EQ eh_security_func0
 	CMP.b XL2, 0x01
@@ -1130,10 +1196,9 @@ eh_security_func0:
 	CALL set_password
 	JMP setup_cat_redraw
 eh_security_func1:
-	LOD.dw EX1, [A7]
-	COPY EX2, R0
-	CALL switch_bit
-	STR.dw EX1, [A7]
+	COPY EX1, R0
+	INC EX1
+	CALL bit_mask
 	JMP setup_cat_redraw
 	
 eh_exit:
@@ -1157,7 +1222,7 @@ eh_exit_func0:
 eh_exit_func1:
 	LDI.dw IX, 0x00040080 ; temporary CMOS settings
 	LDI.dw IY, 0x00010C00 ; CMOS settings
-	LDI.dw A0, 36
+	LDI.dw A0, 52
 	CALL copy_block
 	; STR.dw R0, [A7]
 	; STR.dw R0, [A7+8]
@@ -1378,21 +1443,13 @@ draw_lr_l:
 	POP EX1
 	RET
 
-switch_bit:
-	; EX1 - Bios setting
-	; EX2 - Bit selector
-	PUSH EX3
-	XOR EX3, EX3
-	INC EX3
-	CMP.b XL2, R0
-	JMP.EQ switch_bit_end
-switch_bit_l:
-	ROL EX3, 1
-	DEC EX2
-	JMP.NZ switch_bit_l
-switch_bit_end:
-	XOR EX1, EX3
-	POP EX3
+bit_mask:
+	; EX1 - Mask
+	PUSH EX2
+	LOD.dw EX2, [0x000400A0]
+	XOR EX2, EX1
+	STR.dw EX2, [0x000400A0]
+	POP EX2
 	RET
 
  ; EX1 = Answer (0 - No, 1 - Yes)
@@ -2054,7 +2111,7 @@ disk_isr_end:
 
 .data
 buffer: .db 0, 0, 0, 0
-msg_init: .db 10, "FBIOS v0.3.05", 10, 10, 0
+msg_init: .db 10, "FBIOS v0.3.06", 10, 10, 0
 
 msg_press_del: .db "Press [DEL] to enter SETUP", 10
 msg_press_tab: .db "Press [TAB] to enter BOOT MENU", 10
@@ -2112,10 +2169,10 @@ dev_80stub: .db 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0
 ; Данные для BIOS
 rusure: .db " Are you sure? (Y/N) - ", 0
 cpu_name: .db "CPU      : i80148", 0
-bios_ver: .db "BIOS     : FBIOS v0.3.05", 0
+bios_ver: .db "BIOS     : FBIOS v0.3.06", 0
 
-bios_disable: .db "Disabled", 0
-bios_enable: .db "Enabled", 0
+bios_disable: .db "X]", 0
+bios_enable: .db 0xFB, "]", 0
 
 cat_main: .db " Main ", 0 
 cat_advanced: .db " Advanced ", 0
@@ -2123,7 +2180,8 @@ cat_boot: .db " Boot ", 0
 cat_security: .db " Security ", 0
 cat_exit: .db " Exit ", 0
 
-boot_seldisk: .db 0x0F, "Select disk for boot", 0
+boot_bysign: .db "  Bypass Disk Check - [", 0
+
 
 exit_without: .db "> Exit without saving", 0
 exit_sae: .db "> Save and exit", 0
@@ -2149,7 +2207,7 @@ boot_menu_stub: .db " - ", 0
 boot_menu_empty: .db "empty  ", 0
 boot_menu_present: .db "present", 0
 boot_menu_error: .db "ERROR  ", 0
-boot_menu_booting: .db "Booting from ", 0
+boot_menu_booting: .db "Booting", 0
 boot_menu_waitsome: .db "Wait...", 0
 boot_menu_dskmiss: .db "Disk is missing, try another disk!", 0
 
