@@ -1,6 +1,7 @@
 .project-cheatsheet.md
 i80148/EMULATOR_TODO.md
 emulator/build/
+emulator/dist/emulator.cfg
 imgui.ini
 i80148/tools/CBASIC/__pycache__/
 __pycache__/

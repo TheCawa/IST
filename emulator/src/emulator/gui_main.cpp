@@ -52,6 +52,16 @@ static std::string resolve_bios_path(const char* user_path) {
     }
     std::string exe_dir = get_exe_dir();
     const char* candidates[] = {
+        "BIOS/i80148/CBIOS.bin",
+        "BIOS/i80148/BIOS.bin",
+        "../i80148/PC48/BIOS/i80148/CBIOS.bin",
+        "../i80148/PC48/BIOS/i80148/BIOS.bin",
+        "../../i80148/PC48/BIOS/i80148/CBIOS.bin",
+        "../../i80148/PC48/BIOS/i80148/BIOS.bin",
+        "../../../i80148/PC48/BIOS/i80148/CBIOS.bin",
+        "../../../i80148/PC48/BIOS/i80148/BIOS.bin",
+        "i80148/PC48/BIOS/i80148/CBIOS.bin",
+        "i80148/PC48/BIOS/i80148/BIOS.bin",
         "CBIOS.bin",
         "CBIOS/CBIOS.bin",
         "../i80148/PC48/Programs/CBIOS/CBIOS.bin",
@@ -72,15 +82,25 @@ int main(int argc, char* argv[]) {
     cpu_backend_register(&g_cpu_backend_i80148);
     cpu_backend_register(&g_cpu_backend_i8046);
 
-    const VideoCard* vc = videocard_get_default();
+    // Restore the last used machine configuration. Command-line arguments below
+    // take precedence over the stored values.
+    EmulatorConfig config;
+    emulator_config_load(&config);
+    emulator_apply_config(&config);
+
+    const VideoCard* vc = nullptr;
+    if (config.video_card[0]) vc = videocard_find_by_name(config.video_card);
+    if (!vc) vc = videocard_get_default();
 
     // Parse arguments. Usage: emulator [--cpu name] [--bios path] [--ram size] [--vram size] <file> [load_addr] [disk_image] [--vc name]
     const char* filename = nullptr;
     uint32_t load_addr = 0;
     bool load_addr_set = false;
     const char* disk_image = nullptr;
-    const char* cpu_name = "i80148";
-    const char* bios_path = nullptr;
+    const char* cpu_name = config.cpu[0] ? config.cpu : "i80148";
+    bool cpu_from_cli = false;
+    const char* bios_path = config.bios_path[0] ? config.bios_path : nullptr;
+    bool bios_from_cli = false;
     const char* ram_size_str = nullptr;
     const char* vram_size_str = nullptr;
 
@@ -117,6 +137,7 @@ int main(int argc, char* argv[]) {
         } else if (strcmp(argv[i], "--cpu") == 0) {
             if (i + 1 < argc) {
                 cpu_name = argv[++i];
+                cpu_from_cli = true;
             } else {
                 std::cerr << "[ERROR] --cpu requires a CPU name\n";
                 cpu_backend_print_list();
@@ -125,6 +146,7 @@ int main(int argc, char* argv[]) {
         } else if (strcmp(argv[i], "--bios") == 0) {
             if (i + 1 < argc) {
                 bios_path = argv[++i];
+                bios_from_cli = true;
             } else {
                 std::cerr << "[ERROR] --bios requires a path\n";
                 return 1;
@@ -140,16 +162,37 @@ int main(int argc, char* argv[]) {
     }
 
     const CpuBackend* backend = cpu_backend_find(cpu_name);
+    if (!backend && !cpu_from_cli) {
+        // Stored CPU is no longer available: fall back to the default.
+        std::cerr << "[WARN] Unknown CPU in config: " << cpu_name << "\n";
+        backend = cpu_backend_find("i80148");
+    }
     if (!backend) {
         std::cerr << "[ERROR] Unknown CPU backend: " << cpu_name << "\n";
         cpu_backend_print_list();
         return 1;
     }
 
-    size_t ram_size = ram_size_str ? cpu_parse_size(ram_size_str) : backend->mem_size_default;
-    if (ram_size == 0) ram_size = backend->mem_size_default;
-    size_t vram_size = vram_size_str ? cpu_parse_size(vram_size_str) : backend->vram_size_default;
-    if (vram_size == 0) vram_size = backend->vram_size_default;
+    size_t ram_size = backend->mem_size_default;
+    size_t vram_size = backend->vram_size_default;
+    if (ram_size_str) {
+        ram_size = cpu_parse_size(ram_size_str);
+        if (ram_size == 0) ram_size = backend->mem_size_default;
+    } else if (config.ram_kb > 0) {
+        size_t kb = (size_t)config.ram_kb;
+        if (kb < 64) kb = 64;
+        if (kb > 1024 * 1024) kb = 1024 * 1024; // 1 GB safety cap
+        ram_size = kb * 1024;
+    }
+    if (vram_size_str) {
+        vram_size = cpu_parse_size(vram_size_str);
+        if (vram_size == 0) vram_size = backend->vram_size_default;
+    } else if (config.vram_kb > 0) {
+        size_t kb = (size_t)config.vram_kb;
+        if (kb < 64) kb = 64;
+        if (kb > 1024 * 1024) kb = 1024 * 1024; // 1 GB safety cap
+        vram_size = kb * 1024;
+    }
 
     std::vector<uint8_t> memory(ram_size, 0);
     std::vector<uint8_t> vram(vram_size, 0);
@@ -159,6 +202,15 @@ int main(int argc, char* argv[]) {
     cpu_init(&cpu, backend, memory.data(), ram_size, vram.data(), vram_size);
     cpu.gui_mode = true;
     pit_init(&cpu);
+
+    // Restore the last used disk images (per drive).
+    for (int i = 0; i < DISK_MAX_DRIVES; i++) {
+        if (config.disk_paths[i][0]) {
+            strncpy(cpu.disk_drives[i].image_path, config.disk_paths[i],
+                    sizeof(cpu.disk_drives[i].image_path) - 1);
+            cpu.disk_drives[i].image_path[sizeof(cpu.disk_drives[i].image_path) - 1] = '\0';
+        }
+    }
 
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
@@ -175,9 +227,24 @@ int main(int argc, char* argv[]) {
     bool run_program = (filename != nullptr);
     bool rom_override = run_program && load_addr_set && (load_addr == 0x00000000);
 
+    // Resolve the BIOS to use: explicit --bios > last used BIOS > built-in default.
+    std::string resolved_bios;
+    if (bios_path) {
+        FILE* bf = fopen(bios_path, "rb");
+        if (bf) {
+            fclose(bf);
+            resolved_bios = bios_path;
+        } else if (bios_from_cli) {
+            std::cerr << "[WARN] BIOS file not found: " << bios_path << "\n";
+        }
+    }
+    if (resolved_bios.empty()) {
+        resolved_bios = resolve_bios_path(nullptr);
+    }
+    emulator_set_bios_path(resolved_bios.c_str());
+
     if (!run_program) {
-        // No program given: load default BIOS and boot from it.
-        std::string resolved_bios = resolve_bios_path(bios_path);
+        // No program given: load bios and boot from it.
         if (!resolved_bios.empty()) {
             if (cpu_load_file(&cpu, resolved_bios.c_str(), 0x00000000) != 0) {
                 std::cerr << "[WARN] Failed to load BIOS from " << resolved_bios << "\n";
@@ -247,7 +314,7 @@ int main(int argc, char* argv[]) {
                 CpuSpeedMode mode = emulator_get_speed_mode();
                 int fixed_steps = emulator_get_fixed_steps();
                 int max_steps = emulator_get_max_steps();
-                int budget_ms = (mode == CPU_SPEED_ADAPTIVE) ? 10 : 0;
+                int budget_ms = (mode == CPU_SPEED_ADAPTIVE) ? emulator_get_frame_budget_ms() : 0;
                 int steps = 0;
 
                 while (!cpu.halted && steps < max_steps) {
@@ -272,6 +339,9 @@ int main(int argc, char* argv[]) {
             SDL_Delay(16 - render_elapsed);
         }
     }
+
+    // Remember the last used machine configuration for the next launch.
+    emulator_save_current_config(&cpu);
 
     pit_shutdown(&cpu);
     emulator_shutdown();

@@ -32,6 +32,10 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <cctype>
+#include <algorithm>
+#include <string>
+#include <vector>
 #include <windows.h>
 #include <commdlg.h>
 
@@ -79,6 +83,26 @@ static int g_cpu_budget_ms = 10;
 static size_t g_desired_ram_kb = 0;
 static size_t g_desired_vram_kb = 0;
 
+// Video color depth: 4 = 16 colors, 8 = 256 colors (VGA).
+static int g_color_depth = 8;
+
+// -----------------------------------------------------------------------------
+// BIOS browser state (files under i80148/PC48/BIOS/<cpu-model>/*.bin).
+// -----------------------------------------------------------------------------
+struct BiosEntry {
+    std::string path;
+    std::string name;
+    std::string model;  // first-level subdirectory, empty for the root folder
+};
+
+static char g_bios_root[MAX_PATH] = "";
+static char g_selected_bios_path[EMU_CONFIG_PATH_MAX] = "";
+static char g_bios_status[192] = "";
+static bool g_bios_needs_scan = true;
+static bool g_bios_only_current = false;
+static int  g_bios_selected = -1;
+static std::vector<BiosEntry> g_bios_entries;
+
 // Input capture state: when true, keyboard/mouse events go to the emulated CPU.
 static bool g_input_captured = false;
 static bool g_scale_mode = false;
@@ -119,6 +143,258 @@ static bool save_file_dialog(char* out_path, size_t max_len, const char* filter,
     strncpy(out_path, filename, max_len - 1);
     out_path[max_len - 1] = '\0';
     return true;
+}
+
+// -----------------------------------------------------------------------------
+// Persistent configuration
+// -----------------------------------------------------------------------------
+
+static std::string emu_exe_dir() {
+    char buf[MAX_PATH];
+    DWORD len = GetModuleFileNameA(nullptr, buf, MAX_PATH);
+    if (len == 0 || len >= MAX_PATH) return "";
+    for (int i = (int)len - 1; i >= 0; i--) {
+        if (buf[i] == '\\' || buf[i] == '/') {
+            buf[i] = '\0';
+            break;
+        }
+    }
+    return std::string(buf);
+}
+
+static const char* emulator_config_file_path() {
+    static std::string path;
+    if (path.empty()) {
+        std::string dir = emu_exe_dir();
+        path = dir.empty() ? std::string("emulator.cfg") : (dir + "/emulator.cfg");
+    }
+    return path.c_str();
+}
+
+static void cfg_copy(char* dst, size_t dst_size, const char* src) {
+    if (!dst || dst_size == 0) return;
+    if (!src) src = "";
+    strncpy(dst, src, dst_size - 1);
+    dst[dst_size - 1] = '\0';
+}
+
+static void cfg_trim(char* s) {
+    if (!s) return;
+    char* start = s;
+    while (*start == ' ' || *start == '\t') start++;
+    if (start != s) memmove(s, start, strlen(start) + 1);
+    size_t len = strlen(s);
+    while (len > 0) {
+        char c = s[len - 1];
+        if (c != ' ' && c != '\t' && c != '\r' && c != '\n') break;
+        s[--len] = '\0';
+    }
+}
+
+// Canonical absolute path with Windows separators, used to compare paths that
+// may be written differently ("../dir/file" vs "dir/file", '/' vs '\\').
+static std::string normalize_path(const char* path) {
+    if (!path || !path[0]) return "";
+    char buf[MAX_PATH * 2];
+    DWORD len = GetFullPathNameA(path, sizeof(buf), buf, nullptr);
+    std::string out = (len > 0 && len < sizeof(buf)) ? std::string(buf) : std::string(path);
+    for (char& c : out) {
+        if (c == '/') c = '\\';
+    }
+    return out;
+}
+
+static bool paths_equal(const std::string& a, const char* b) {
+    return _stricmp(normalize_path(a.c_str()).c_str(),
+                    normalize_path(b).c_str()) == 0;
+}
+
+void emulator_config_defaults(EmulatorConfig* cfg) {
+    if (!cfg) return;
+    memset(cfg, 0, sizeof(*cfg));
+    cfg_copy(cfg->cpu, sizeof(cfg->cpu), "i80148");
+    cfg->display_width = 640;
+    cfg->display_height = 400;
+    cfg->display_scale = 1.0f;
+    cfg->color_depth = 8;
+    cfg->speed_mode = CPU_SPEED_ADAPTIVE;
+    cfg->fixed_steps = 50;
+    cfg->max_steps = 100000;
+    cfg->frame_budget_ms = 10;
+    cfg->disk_drive = 0;
+    cfg->valid = false;
+}
+
+bool emulator_config_load(EmulatorConfig* cfg) {
+    if (!cfg) return false;
+    emulator_config_defaults(cfg);
+
+    FILE* f = fopen(emulator_config_file_path(), "r");
+    if (!f) return false;
+
+    char line[1024];
+    bool any = false;
+    while (fgets(line, sizeof(line), f)) {
+        cfg_trim(line);
+        if (!line[0] || line[0] == '#' || line[0] == ';') continue;
+
+        char* eq = strchr(line, '=');
+        if (!eq) continue;
+        *eq = '\0';
+        char* key = line;
+        char* val = eq + 1;
+        cfg_trim(key);
+        cfg_trim(val);
+        if (!key[0]) continue;
+
+        if (strcmp(key, "cpu") == 0) {
+            cfg_copy(cfg->cpu, sizeof(cfg->cpu), val);
+        } else if (strcmp(key, "video_card") == 0) {
+            cfg_copy(cfg->video_card, sizeof(cfg->video_card), val);
+        } else if (strcmp(key, "bios") == 0) {
+            cfg_copy(cfg->bios_path, sizeof(cfg->bios_path), val);
+        } else if (strncmp(key, "disk", 4) == 0 &&
+                   key[4] >= '0' && key[4] <= '9' && key[5] == '\0') {
+            int idx = key[4] - '0';
+            if (idx >= 0 && idx < DISK_MAX_DRIVES) {
+                cfg_copy(cfg->disk_paths[idx], sizeof(cfg->disk_paths[idx]), val);
+            }
+        } else if (strcmp(key, "ram_kb") == 0) {
+            cfg->ram_kb = atoi(val);
+        } else if (strcmp(key, "vram_kb") == 0) {
+            cfg->vram_kb = atoi(val);
+        } else if (strcmp(key, "display_width") == 0) {
+            cfg->display_width = atoi(val);
+        } else if (strcmp(key, "display_height") == 0) {
+            cfg->display_height = atoi(val);
+        } else if (strcmp(key, "display_scale") == 0) {
+            cfg->display_scale = (float)atof(val);
+        } else if (strcmp(key, "color_depth") == 0) {
+            cfg->color_depth = atoi(val);
+        } else if (strcmp(key, "speed_mode") == 0) {
+            cfg->speed_mode = atoi(val);
+        } else if (strcmp(key, "fixed_steps") == 0) {
+            cfg->fixed_steps = atoi(val);
+        } else if (strcmp(key, "max_steps") == 0) {
+            cfg->max_steps = atoi(val);
+        } else if (strcmp(key, "frame_budget_ms") == 0) {
+            cfg->frame_budget_ms = atoi(val);
+        } else if (strcmp(key, "disk_drive") == 0) {
+            cfg->disk_drive = atoi(val);
+        } else {
+            continue;
+        }
+        any = true;
+    }
+    fclose(f);
+
+    cfg->valid = any;
+    return any;
+}
+
+bool emulator_config_save(const EmulatorConfig* cfg) {
+    if (!cfg) return false;
+    FILE* f = fopen(emulator_config_file_path(), "w");
+    if (!f) return false;
+
+    fprintf(f, "# Iprocessor emulator configuration\n");
+    fprintf(f, "# Automatically written on exit. Command-line options override these values.\n\n");
+    fprintf(f, "cpu=%s\n", cfg->cpu);
+    fprintf(f, "video_card=%s\n", cfg->video_card);
+    fprintf(f, "bios=%s\n", cfg->bios_path);
+    for (int i = 0; i < DISK_MAX_DRIVES; i++) {
+        fprintf(f, "disk%d=%s\n", i, cfg->disk_paths[i]);
+    }
+    fprintf(f, "ram_kb=%d\n", cfg->ram_kb);
+    fprintf(f, "vram_kb=%d\n", cfg->vram_kb);
+    fprintf(f, "display_width=%d\n", cfg->display_width);
+    fprintf(f, "display_height=%d\n", cfg->display_height);
+    fprintf(f, "display_scale=%.3f\n", cfg->display_scale);
+    fprintf(f, "color_depth=%d\n", cfg->color_depth);
+    fprintf(f, "speed_mode=%d\n", cfg->speed_mode);
+    fprintf(f, "fixed_steps=%d\n", cfg->fixed_steps);
+    fprintf(f, "max_steps=%d\n", cfg->max_steps);
+    fprintf(f, "frame_budget_ms=%d\n", cfg->frame_budget_ms);
+    fprintf(f, "disk_drive=%d\n", cfg->disk_drive);
+
+    fclose(f);
+    return true;
+}
+
+void emulator_apply_config(const EmulatorConfig* cfg) {
+    if (!cfg) return;
+
+    if (cfg->display_width >= 160 && cfg->display_width <= 4096)
+        g_display_width = cfg->display_width;
+    if (cfg->display_height >= 100 && cfg->display_height <= 4096)
+        g_display_height = cfg->display_height;
+
+    float scale = cfg->display_scale;
+    if (scale < 0.5f) scale = 0.5f;
+    if (scale > 3.0f) scale = 3.0f;
+    if (scale > 0.0f) g_display_scale = scale;
+
+    g_color_depth = (cfg->color_depth == 4) ? 4 : 8;
+
+    int speed = cfg->speed_mode;
+    if (speed < CPU_SPEED_ADAPTIVE) speed = CPU_SPEED_ADAPTIVE;
+    if (speed > CPU_SPEED_UNLIMITED) speed = CPU_SPEED_UNLIMITED;
+    g_cpu_speed_mode = (CpuSpeedMode)speed;
+
+    if (cfg->fixed_steps > 0) g_cpu_fixed_steps = cfg->fixed_steps;
+    if (cfg->max_steps > 0) g_cpu_max_steps = cfg->max_steps;
+    if (cfg->frame_budget_ms > 0) {
+        g_cpu_budget_ms = cfg->frame_budget_ms;
+        if (g_cpu_budget_ms > 15) g_cpu_budget_ms = 15;
+    }
+    if (cfg->disk_drive >= 0 && cfg->disk_drive < DISK_MAX_DRIVES)
+        g_disk_drive_idx = cfg->disk_drive;
+}
+
+void emulator_capture_config(EmulatorConfig* cfg, const Cpu* cpu) {
+    if (!cfg) return;
+    memset(cfg, 0, sizeof(*cfg));
+
+    cfg_copy(cfg->cpu, sizeof(cfg->cpu),
+             (cpu && cpu->backend) ? cpu->backend->name : "i80148");
+    cfg_copy(cfg->video_card, sizeof(cfg->video_card), g_vc ? g_vc->name : "");
+    cfg_copy(cfg->bios_path, sizeof(cfg->bios_path), g_selected_bios_path);
+
+    if (cpu) {
+        for (int i = 0; i < DISK_MAX_DRIVES; i++) {
+            cfg_copy(cfg->disk_paths[i], sizeof(cfg->disk_paths[i]),
+                     cpu->disk_drives[i].image_path);
+        }
+    }
+
+    cfg->ram_kb = (int)g_desired_ram_kb;
+    cfg->vram_kb = (int)g_desired_vram_kb;
+    cfg->display_width = g_display_width;
+    cfg->display_height = g_display_height;
+    cfg->display_scale = g_display_scale;
+    cfg->color_depth = g_color_depth;
+    cfg->speed_mode = (int)g_cpu_speed_mode;
+    cfg->fixed_steps = g_cpu_fixed_steps;
+    cfg->max_steps = g_cpu_max_steps;
+    cfg->frame_budget_ms = g_cpu_budget_ms;
+    cfg->disk_drive = g_disk_drive_idx;
+    cfg->valid = true;
+}
+
+bool emulator_save_current_config(const Cpu* cpu) {
+    EmulatorConfig cfg;
+    emulator_capture_config(&cfg, cpu);
+    bool ok = emulator_config_save(&cfg);
+    if (!ok) {
+        fprintf(stderr, "[WARN] Failed to save configuration to %s\n",
+                emulator_config_file_path());
+    }
+    return ok;
+}
+
+void emulator_set_bios_path(const char* path) {
+    std::string normalized = normalize_path(path ? path : "");
+    cfg_copy(g_selected_bios_path, sizeof(g_selected_bios_path), normalized.c_str());
 }
 
 bool emulator_is_running() { return g_cpu_running; }
@@ -220,6 +496,7 @@ void emulator_set_fixed_steps(int steps) { g_cpu_fixed_steps = steps > 0 ? steps
 int  emulator_get_fixed_steps(void) { return g_cpu_fixed_steps; }
 void emulator_set_max_steps(int steps) { g_cpu_max_steps = steps > 0 ? steps : 1; }
 int  emulator_get_max_steps(void) { return g_cpu_max_steps; }
+int  emulator_get_frame_budget_ms(void) { return g_cpu_budget_ms; }
 
 void emulator_set_desired_ram_vram(size_t ram_kb, size_t vram_kb) {
     g_desired_ram_kb = ram_kb;
@@ -508,10 +785,282 @@ static bool load_machine_state(Cpu* cpu, const char* filename, std::vector<uint8
     return ok;
 }
 
+// -----------------------------------------------------------------------------
+// BIOS browser
+// -----------------------------------------------------------------------------
+
+static bool path_is_directory(const std::string& path) {
+    DWORD attrs = GetFileAttributesA(path.c_str());
+    return attrs != INVALID_FILE_ATTRIBUTES && (attrs & FILE_ATTRIBUTE_DIRECTORY);
+}
+
+static bool has_bin_extension(const std::string& name) {
+    if (name.size() < 5) return false;
+    std::string ext = name.substr(name.size() - 4);
+    for (char& ch : ext) ch = (char)tolower((unsigned char)ch);
+    return ext == ".bin";
+}
+
+static std::string find_bios_root() {
+    std::string exe_dir = emu_exe_dir();
+    const char* candidates[] = {
+        "BIOS",
+        "../i80148/PC48/BIOS",
+        "../../i80148/PC48/BIOS",
+        "../../../i80148/PC48/BIOS",
+        "i80148/PC48/BIOS",
+        "../i80148/PC48/BIOS",
+        "../../i80148/PC48/BIOS"
+    };
+
+    for (const char* rel : candidates) {
+        std::string path = exe_dir.empty() ? std::string(rel) : (exe_dir + "/" + rel);
+        if (path_is_directory(path)) return path;
+    }
+
+    // Last resort: relative to the current working directory.
+    if (path_is_directory(candidates[0])) return candidates[0];
+    return "";
+}
+
+static void scan_bios_recursive(const std::string& dir, const std::string& model,
+                                std::vector<BiosEntry>& out) {
+    std::string pattern = dir + "/*";
+    WIN32_FIND_DATAA fd;
+    HANDLE h = FindFirstFileA(pattern.c_str(), &fd);
+    if (h == INVALID_HANDLE_VALUE) return;
+
+    do {
+        std::string name = fd.cFileName;
+        if (name == "." || name == "..") continue;
+
+        std::string full = dir + "/" + name;
+        if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            scan_bios_recursive(full, model.empty() ? name : (model + "/" + name), out);
+        } else if (has_bin_extension(name)) {
+            BiosEntry entry;
+            entry.path = full;
+            entry.name = name;
+            entry.model = model;
+            out.push_back(entry);
+        }
+    } while (FindNextFileA(h, &fd));
+
+    FindClose(h);
+}
+
+static void rescan_bios_files() {
+    std::string previous;
+    if (g_bios_selected >= 0 && g_bios_selected < (int)g_bios_entries.size()) {
+        previous = g_bios_entries[g_bios_selected].path;
+    }
+
+    g_bios_entries.clear();
+    g_bios_selected = -1;
+
+    std::string root = find_bios_root();
+    if (!root.empty()) {
+        root = normalize_path(root.c_str());
+    }
+    if (root.empty()) {
+        g_bios_root[0] = '\0';
+        snprintf(g_bios_status, sizeof(g_bios_status),
+                 "BIOS folder not found. Expected i80148/PC48/BIOS next to the project.");
+    } else {
+        cfg_copy(g_bios_root, sizeof(g_bios_root), root.c_str());
+        scan_bios_recursive(root, "", g_bios_entries);
+
+        std::sort(g_bios_entries.begin(), g_bios_entries.end(),
+                  [](const BiosEntry& a, const BiosEntry& b) {
+                      int cmp = _stricmp(a.model.c_str(), b.model.c_str());
+                      if (cmp != 0) return cmp < 0;
+                      return _stricmp(a.name.c_str(), b.name.c_str()) < 0;
+                  });
+
+        // Keep the current CPU model group at the top for convenience.
+        std::string current = g_current_backend ? g_current_backend->name : "";
+        if (!current.empty()) {
+            std::stable_sort(g_bios_entries.begin(), g_bios_entries.end(),
+                             [&current](const BiosEntry& a, const BiosEntry& b) {
+                                 bool a_current = _stricmp(a.model.c_str(), current.c_str()) == 0;
+                                 bool b_current = _stricmp(b.model.c_str(), current.c_str()) == 0;
+                                 return a_current && !b_current;
+                             });
+        }
+
+        snprintf(g_bios_status, sizeof(g_bios_status), "Found %d BIOS image(s).",
+                 (int)g_bios_entries.size());
+    }
+
+    // Restore the previous selection, or select the currently loaded file.
+    for (int i = 0; i < (int)g_bios_entries.size(); i++) {
+        bool matches_previous = !previous.empty() &&
+                                _stricmp(g_bios_entries[i].path.c_str(), previous.c_str()) == 0;
+        bool matches_loaded = previous.empty() && g_selected_bios_path[0] &&
+                              paths_equal(g_bios_entries[i].path, g_selected_bios_path);
+        if (matches_previous || matches_loaded) {
+            g_bios_selected = i;
+            break;
+        }
+    }
+
+    fprintf(stderr, "[BIOS] %s\n", g_bios_status);
+    g_bios_needs_scan = false;
+}
+
+static bool load_bios_file(Cpu* cpu, std::vector<uint8_t>& memory,
+                           std::vector<uint8_t>& vram, const char* path) {
+    if (!cpu || !path || !path[0]) return false;
+
+    FILE* f = fopen(path, "rb");
+    if (!f) {
+        snprintf(g_bios_status, sizeof(g_bios_status), "Cannot open BIOS file: %s", path);
+        return false;
+    }
+    fclose(f);
+
+    emulator_reset_cpu(cpu, memory, vram);
+
+    // Wipe the low BIOS/ROM window so a smaller replacement BIOS does not
+    // leave stale code from the previous one behind.
+    if (cpu->mem && cpu->mem_size > 0) {
+        size_t low = cpu->mem_size < 0x00020000 ? cpu->mem_size : 0x00020000;
+        memset(cpu->mem, 0, low);
+    }
+
+    if (cpu_load_file(cpu, path, 0x00000000) != 0) {
+        snprintf(g_bios_status, sizeof(g_bios_status), "Failed to load BIOS: %s", path);
+        return false;
+    }
+
+    if (cpu->backend) {
+        cpu_set_reg(cpu, cpu->backend->pc_register, 0x00000000);
+    }
+    g_cpu_running = true;
+    emulator_set_bios_path(path);
+
+    if (g_window) {
+        char title[512];
+        const char* name = strrchr(path, '\\');
+        if (!name) name = strrchr(path, '/');
+        name = name ? name + 1 : path;
+        snprintf(title, sizeof(title), "%s - %s - BIOS: %s",
+                 cpu->backend ? cpu->backend->name : "cpu",
+                 g_vc ? g_vc->name : "no-vc", name);
+        SDL_SetWindowTitle(g_window, title);
+    }
+
+    snprintf(g_bios_status, sizeof(g_bios_status), "Loaded BIOS: %s", path);
+    return true;
+}
+
+static void render_bios_tab(Cpu* cpu, std::vector<uint8_t>& memory,
+                            std::vector<uint8_t>& vram) {
+    if (g_bios_needs_scan) rescan_bios_files();
+
+    ImGui::TextWrapped("BIOS folder: %s", g_bios_root[0] ? g_bios_root : "(not found)");
+    ImGui::TextWrapped("Loaded: %s", g_selected_bios_path[0] ? g_selected_bios_path : "(none)");
+
+    if (ImGui::Button("Rescan", ImVec2(90, 0))) {
+        g_bios_needs_scan = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Load BIOS file...", ImVec2(150, 0))) {
+        char path[MAX_PATH] = "";
+        if (open_file_dialog(path, sizeof(path),
+                "BIOS images (*.bin)\0*.bin\0All files (*.*)\0*.*\0",
+                "Select BIOS image")) {
+            load_bios_file(cpu, memory, vram, path);
+            g_bios_selected = -1;
+            g_bios_needs_scan = true;
+        }
+    }
+    ImGui::SameLine();
+    ImGui::Checkbox("Current CPU only", &g_bios_only_current);
+
+    if (g_bios_status[0]) {
+        ImGui::TextColored(ImVec4(0.15f, 0.45f, 0.15f, 1.0f), "%s", g_bios_status);
+    }
+
+    ImGui::Separator();
+
+    const std::string current = g_current_backend ? g_current_backend->name : "";
+    ImGui::BeginChild("BiosList", ImVec2(0, 250), true);
+    if (g_bios_entries.empty()) {
+        ImGui::TextDisabled("No .bin files found.");
+        ImGui::TextDisabled("Expected layout: i80148/PC48/BIOS/<cpu-model>/*.bin");
+    } else {
+        std::string last_group;
+        bool group_open = false;
+        bool any_visible = false;
+
+        for (int i = 0; i < (int)g_bios_entries.size(); i++) {
+            const BiosEntry& entry = g_bios_entries[i];
+            if (g_bios_only_current && !current.empty() &&
+                _stricmp(entry.model.c_str(), current.c_str()) != 0) {
+                continue;
+            }
+
+            std::string group = entry.model.empty() ? "General" : entry.model;
+            if (group != last_group) {
+                if (group_open) ImGui::TreePop();
+                bool is_current = !current.empty() &&
+                                  _stricmp(entry.model.c_str(), current.c_str()) == 0;
+                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
+                if (is_current) flags |= ImGuiTreeNodeFlags_Selected;
+                ImGui::PushID(group.c_str());
+                group_open = ImGui::TreeNodeEx(group.c_str(), flags, "%s", group.c_str());
+                ImGui::PopID();
+                last_group = group;
+            }
+
+            if (group_open) {
+                ImGui::PushID(i);
+                bool selected = (g_bios_selected == i);
+                if (ImGui::Selectable(entry.name.c_str(), selected,
+                                      ImGuiSelectableFlags_AllowDoubleClick)) {
+                    g_bios_selected = i;
+                    if (ImGui::IsMouseDoubleClicked(0)) {
+                        load_bios_file(cpu, memory, vram, entry.path.c_str());
+                    }
+                }
+                if (selected) ImGui::SetItemDefaultFocus();
+                ImGui::PopID();
+                any_visible = true;
+            }
+        }
+        if (group_open) ImGui::TreePop();
+
+        if (!any_visible) {
+            ImGui::TextDisabled("No BIOS images for the current CPU model.");
+        }
+    }
+    ImGui::EndChild();
+
+    bool has_selection = g_bios_selected >= 0 &&
+                         g_bios_selected < (int)g_bios_entries.size();
+    if (!has_selection) ImGui::BeginDisabled();
+    if (ImGui::Button("Load selected BIOS", ImVec2(180, 0))) {
+        load_bios_file(cpu, memory, vram,
+                       g_bios_entries[g_bios_selected].path.c_str());
+    }
+    if (!has_selection) ImGui::EndDisabled();
+    ImGui::SameLine();
+    if (ImGui::Button("Clear selection", ImVec2(130, 0))) {
+        g_bios_selected = -1;
+    }
+    if (has_selection) {
+        ImGui::TextWrapped("Selected: %s", g_bios_entries[g_bios_selected].path.c_str());
+    }
+}
+
 void emulator_render(Cpu* cpu, SDL_Renderer* renderer, std::vector<uint8_t>& memory, std::vector<uint8_t>& vram) {
     (void)vram;  // available for future VRAM viewers
     if (cpu && cpu->backend && !g_current_backend) {
         g_current_backend = cpu->backend;
+    }
+    if (g_bios_needs_scan) {
+        rescan_bios_files();
     }
 
     if (g_vc) {
@@ -580,7 +1129,11 @@ void emulator_render(Cpu* cpu, SDL_Renderer* renderer, std::vector<uint8_t>& mem
             }
             ImGui::Separator();
             if (ImGui::MenuItem("Reset CPU")) { emulator_reset_cpu(cpu, memory, vram); g_cpu_running = true; }
-            if (ImGui::MenuItem("Exit")) { emulator_shutdown(); exit(0); }
+            if (ImGui::MenuItem("Exit")) {
+                emulator_save_current_config(cpu);
+                emulator_shutdown();
+                exit(0);
+            }
             ImGui::EndMenu();
         }
 
@@ -704,7 +1257,6 @@ void emulator_render(Cpu* cpu, SDL_Renderer* renderer, std::vector<uint8_t>& mem
             }
 
             const char* depth_names[] = { "16 colors", "256 colors (VGA)" };
-            static int g_color_depth = 8; // 4 = 16 colors, 8 = 256 colors
             int depth_idx = (g_color_depth == 8) ? 1 : 0;
             if (ImGui::BeginCombo("Color depth", depth_names[depth_idx])) {
                 for (int i = 0; i < 2; i++) {
@@ -927,6 +1479,12 @@ void emulator_render(Cpu* cpu, SDL_Renderer* renderer, std::vector<uint8_t>& mem
             ImGui::Text("Halted = %s", cpu->halted ? "YES" : "NO");
             ImGui::Text("IRQ    = %s", cpu->irq_enabled ? "ON" : "OFF");
 
+            ImGui::EndTabItem();
+        }
+
+        if (ImGui::BeginTabItem("BIOS")) {
+            ImGui::Spacing();
+            render_bios_tab(cpu, memory, vram);
             ImGui::EndTabItem();
         }
 

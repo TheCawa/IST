@@ -53,6 +53,16 @@ static std::string resolve_bios_path(const char* user_path) {
     }
     std::string exe_dir = get_exe_dir();
     const char* candidates[] = {
+        "BIOS/i80148/CBIOS.bin",
+        "BIOS/i80148/BIOS.bin",
+        "../i80148/PC48/BIOS/i80148/CBIOS.bin",
+        "../i80148/PC48/BIOS/i80148/BIOS.bin",
+        "../../i80148/PC48/BIOS/i80148/CBIOS.bin",
+        "../../i80148/PC48/BIOS/i80148/BIOS.bin",
+        "../../../i80148/PC48/BIOS/i80148/CBIOS.bin",
+        "../../../i80148/PC48/BIOS/i80148/BIOS.bin",
+        "i80148/PC48/BIOS/i80148/CBIOS.bin",
+        "i80148/PC48/BIOS/i80148/BIOS.bin",
         "CBIOS.bin",
         "CBIOS/CBIOS.bin",
         "../i80148/PC48/Programs/CBIOS/CBIOS.bin",
@@ -73,7 +83,7 @@ static void print_usage(const char* prog) {
     std::cerr << "\nExamples:\n";
     std::cerr << "  " << prog << " --cpu i80148 program.bin 0x00060000 disk.bin\n";
     std::cerr << "  " << prog << " --cpu i8046  program.bin 0x0000\n";
-    std::cerr << "  " << prog << " --bios ../i80148/PC48/Programs/CBIOS/CBIOS.bin program.bin\n";
+    std::cerr << "  " << prog << " --bios ../i80148/PC48/BIOS/i80148/CBIOS.bin program.bin\n";
     std::cerr << "  " << prog << " --ram 16M --vram 1M program.bin\n";
     std::cerr << "  " << prog << " --dump-term program.bin 0x00060000\n";
 }
