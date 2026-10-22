@@ -79,6 +79,9 @@
 .ORG 0x00060000
 .TEXT
 main:
+sign: .dw 0xB007AB1E				; загрузочная сигнатура
+stub: .dw 0x00000000				; подпись диска
+
         LDI.DW SP, 0x00080000       ; указатель стека
         LDI.DW IX, msg              ; адрес строки
         CALL print_string

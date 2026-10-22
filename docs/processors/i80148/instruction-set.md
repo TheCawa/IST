@@ -8,6 +8,14 @@
 - **FlMask** - маска изменяемых флагов (см. [флаги](flags.md)).
 - **Description** - краткое описание.
 
+## Режимы адрессации
+
+- **Absolute (Абсолютная)** - addr = imm32
+- **Index (Индексная)** - addr = reg + reg
+- **Indirect (Косвенная)** - addr = reg
+- **Index+disp (Индексная со смещением)** - addr = reg + reg + disp8
+- **Indirect+disp (Косвенная со смещением)** - addr = reg + reg + disp8
+
 ## Полная таблица
 
 | OP | SF | Имя | InsType | FlMask | Описание |
@@ -79,36 +87,36 @@
 | `21h` | `01h` | LDI.B | D1B | `--------` | Загрузка байтовой константы |
 | `21h` | `02h` | LDI.W | D1W | `--------` | Загрузка слова |
 | `21h` | `03h` | LDI.DW | D1DW | `--------` | Загрузка dword |
-| `22h` | `00h` | STR.B | D2F | `--------` | Запись байта (flat) |
-| `22h` | `01h` | STR.B | D2S | `--------` | Запись байта (segment) |
-| `22h` | `02h` | STR.B | D2R | `--------` | Запись байта (register) |
-| `22h` | `03h` | STR.B | D2SD | `--------` | Запись байта (segment-disp) |
-| `22h` | `04h` | STR.B | D2RD | `--------` | Запись байта (register-disp) |
-| `22h` | `05h` | STR.W | D2F | `--------` | Запись слова (flat) |
-| `22h` | `06h` | STR.W | D2S | `--------` | Запись слова (segment) |
-| `22h` | `07h` | STR.W | D2R | `--------` | Запись слова (register) |
-| `22h` | `08h` | STR.W | D2SD | `--------` | Запись слова (segment-disp) |
-| `22h` | `09h` | STR.W | D2RD | `--------` | Запись слова (register-disp) |
-| `22h` | `0Ah` | STR.DW | D2F | `--------` | Запись dword (flat) |
-| `22h` | `0Bh` | STR.DW | D2S | `--------` | Запись dword (segment) |
-| `22h` | `0Ch` | STR.DW | D2R | `--------` | Запись dword (register) |
-| `22h` | `0Dh` | STR.DW | D2SD | `--------` | Запись dword (segment-disp) |
-| `22h` | `0Eh` | STR.DW | D2RD | `--------` | Запись dword (register-disp) |
-| `23h` | `00h` | LOD.B | D3F | `--------` | Чтение байта (flat) |
-| `23h` | `01h` | LOD.B | D3S | `--------` | Чтение байта (segment) |
-| `23h` | `02h` | LOD.B | D3R | `--------` | Чтение байта (register) |
-| `23h` | `03h` | LOD.B | D3SD | `--------` | Чтение байта (segment-disp) |
-| `23h` | `04h` | LOD.B | D3RD | `--------` | Чтение байта (register-disp) |
-| `23h` | `05h` | LOD.W | D3F | `--------` | Чтение слова (flat) |
-| `23h` | `06h` | LOD.W | D3S | `--------` | Чтение слова (segment) |
-| `23h` | `07h` | LOD.W | D3R | `--------` | Чтение слова (register) |
-| `23h` | `08h` | LOD.W | D3SD | `--------` | Чтение слова (segment-disp) |
-| `23h` | `09h` | LOD.W | D3RD | `--------` | Чтение слова (register-disp) |
-| `23h` | `0Ah` | LOD.DW | D3F | `--------` | Чтение dword (flat) |
-| `23h` | `0Bh` | LOD.DW | D3S | `--------` | Чтение dword (segment) |
-| `23h` | `0Ch` | LOD.DW | D3R | `--------` | Чтение dword (register) |
-| `23h` | `0Dh` | LOD.DW | D3SD | `--------` | Чтение dword (segment-disp) |
-| `23h` | `0Eh` | LOD.DW | D3RD | `--------` | Чтение dword (register-disp) |
+| `22h` | `00h` | STR.B | D2F | `--------` | Запись байта (absolute) |
+| `22h` | `01h` | STR.B | D2S | `--------` | Запись байта (index) |
+| `22h` | `02h` | STR.B | D2R | `--------` | Запись байта (indirect) |
+| `22h` | `03h` | STR.B | D2SD | `--------` | Запись байта (index+disp) |
+| `22h` | `04h` | STR.B | D2RD | `--------` | Запись байта (indirect+disp) |
+| `22h` | `05h` | STR.W | D2F | `--------` | Запись слова (absolute) |
+| `22h` | `06h` | STR.W | D2S | `--------` | Запись слова (index) |
+| `22h` | `07h` | STR.W | D2R | `--------` | Запись слова (indirect) |
+| `22h` | `08h` | STR.W | D2SD | `--------` | Запись слова (index+disp) |
+| `22h` | `09h` | STR.W | D2RD | `--------` | Запись слова (indirect+disp) |
+| `22h` | `0Ah` | STR.DW | D2F | `--------` | Запись dword (absolute) |
+| `22h` | `0Bh` | STR.DW | D2S | `--------` | Запись dword (index) |
+| `22h` | `0Ch` | STR.DW | D2R | `--------` | Запись dword (indirect) |
+| `22h` | `0Dh` | STR.DW | D2SD | `--------` | Запись dword (index+disp) |
+| `22h` | `0Eh` | STR.DW | D2RD | `--------` | Запись dword (indirect+disp) |
+| `23h` | `00h` | LOD.B | D3F | `--------` | Чтение байта (absolute) |
+| `23h` | `01h` | LOD.B | D3S | `--------` | Чтение байта (index) |
+| `23h` | `02h` | LOD.B | D3R | `--------` | Чтение байта (indirect) |
+| `23h` | `03h` | LOD.B | D3SD | `--------` | Чтение байта (index+disp) |
+| `23h` | `04h` | LOD.B | D3RD | `--------` | Чтение байта (indirect+disp) |
+| `23h` | `05h` | LOD.W | D3F | `--------` | Чтение слова (absolute) |
+| `23h` | `06h` | LOD.W | D3S | `--------` | Чтение слова (index) |
+| `23h` | `07h` | LOD.W | D3R | `--------` | Чтение слова (indirect) |
+| `23h` | `08h` | LOD.W | D3SD | `--------` | Чтение слова (index+disp) |
+| `23h` | `09h` | LOD.W | D3RD | `--------` | Чтение слова (indirect+disp) |
+| `23h` | `0Ah` | LOD.DW | D3F | `--------` | Чтение dword (absolute) |
+| `23h` | `0Bh` | LOD.DW | D3S | `--------` | Чтение dword (index) |
+| `23h` | `0Ch` | LOD.DW | D3R | `--------` | Чтение dword (indirect) |
+| `23h` | `0Dh` | LOD.DW | D3SD | `--------` | Чтение dword (index+disp) |
+| `23h` | `0Eh` | LOD.DW | D3RD | `--------` | Чтение dword (indirect+disp) |
 | `25h` | - | INT | S4 | `--------` | Программное прерывание |
 | `26h` | - | IRET | S0 | `--------` | Возврат из прерывания |
 | `27h` | - | CLI | S0 | `--------` | Запретить прерывания |

@@ -7,14 +7,14 @@
 Шина передаёт данные синхронно по тактовому сигналу.
 
 ```text
-<- High | Low ->
+<- High	| Low ->
 
 X XXXXXXXX XXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXX X
-^ ╘  PORT  ╛ ││││ ╘ DATA IN (32) ════════════════╛ ╘ DATA OUT (32) ═══════════════╛ ╘CAUSE═╛ ┕RI
-            ┕RD│
-              ┕WR
-                ┕RE
-                  ┕EN
+^ ╘	PORT ╛ ││││ ╘ DATA IN (32) ════════════════╛ ╘ DATA OUT (32) ═══════════════╛ ╘CAUSE═╛ ┕RI
+		   ┕RD│
+			┕WR
+			 ┕RE
+			  ┕EN
 ```
 
 **Легенда:**

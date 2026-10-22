@@ -33,10 +33,17 @@
  -#	EX1 - func; EX2 - arg1; EX3 - arg2; EX4 - arg3
  
 	0x49	  - KBD-INT
+	
 	0x50	  - Video services
 		 0x00 - Set video mode
 		 0x01 - Set cursor shape
-	����� ������, ����.
+		 
+	0x51	  - Disk services
+		 0x00 - Get disk parameters
+		 0x01 - Read sector
+		 0x02 - Write sector
+		 
+	!!! Not done yet !!!
 	
 	
  Calls:
@@ -60,7 +67,7 @@
 	
  BOOTLOAD
  --------
- BIOS load 1 sector (1024b) in memory (0x00060000)
+ BIOS load 1 sector (1024b) in memory (0x00060000) and jumps to 0x00060008, because 0x00060000-0x00060007 means signature
  
  SCROLL=OFF
  CURSOR=OFF
@@ -68,6 +75,8 @@
  TERM_ATTR=0x07
  
 CASM148:
+	CLI
+	LDI.dw BP, 0xB007AB1E
 	PUSH EX1
 	PUSH A7
 	LDI.dw A7, 0x00020019
@@ -82,5 +91,51 @@ CASM148:
 	STR.b XL1, [A7]
 	POP A7
 	POP EX1
-    
+	
+ CMOS
+ ----
+ 0x00010000-0x000103FF (1024b; 4 bytes per vector; 256 vectors) - IDT (Interupt descriptor table)
+ 0x00010400-0x000107FF (1024b; 4 bytes per vector; 256 vectors) - DLT (Device list table)
+ 0x00010800-0x00010DFF (1024b; 8 bytes per vector; 128 vectors) - DDL (Disk Drive list)
+ 0x00010C00-0x0001FFFF (62464b) - BIOS settings
+ 
+ 
+ IDT vector: bytes 3-0 = service address
+ DLT vector: byte #0 = Flags, byte #1 = Device class (Did), byte #2 = Vendor ID (Vid), byte #3 = ?
+ DDL vector: bytes 3-0 = disk capacity (in sectors), byte #4 = Flags, bytes 5-7 = Reserved
+ 
+ BIOS Settings (Example: FBIOS):
+	-# Addr = Base:Offset
+	-# Base = 0x00010C00
+	
+	Offset - Ending - Length - Type   - Name
+	
+	0x0000 - 0x001F - 32b	 - string - BIOS Password
+	0x0020 - 0x0023 - 4b	 - bitmap - BIOS Parameters
+	0x0024 - 0x0033 - 16b	 - uint8  - Boot sequence
+	
+ Loading & Saving CMOS
+ ---------------------
+ When you enter in setup: Copy memory block from 0x00010C00 to <dest>
+	(Number of bytes = Size of your CMOS settings; For example, it's 44 bytes for FBIOS: 32 bytes = password; 4 bytes = parameters; 16 bytes = boot sequence)
+	(While you change parameters, they save in <dest> area, and it flush to 0x00010C00 only when you save changes and exit from setup)
+ 
+ When you exit setup with saving: Copy memory block from <dest> to 0x00010C00
+	(Number of bytes = Size of your CMOS settings; For example, it's 36 bytes for FBIOS: 32 bytes = password; 4 bytes = parameters; 8 bytes = boot sequence)
+	
+
+ BIOS BOOT SIGNATYRE
+ -------------------
+	B0 07 AB 1E XX XX XX XX
+	
+ Insert these 8 bytes at the very beginning (sector 0) of the disk to designate it as bootable.
+ The first 4 bytes (B0 07 AB 1E) represent a magic constant used by the BIOS to determine 
+ whether the disk is bootable.
+ 
+ The next 4 bytes (XX XX XX XX) are reserved for disk signatures, like FS, OS or bootloader
+
+ BIOS must jump to 0x00060008!
+
+ .p.s. 0xB007AB1E in hexspeak means "BOOTABLE"
+ 
 ```
