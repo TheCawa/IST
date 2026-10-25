@@ -1140,6 +1140,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#режимы-адрессации" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Режимы адрессации
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#полная-таблица" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2260,6 +2271,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#режимы-адрессации" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Режимы адрессации
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#полная-таблица" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2309,6 +2331,14 @@
 <li><strong>InsType</strong> - формат инструкции (см. <a href="../instruction-formats/">форматы</a>).</li>
 <li><strong>FlMask</strong> - маска изменяемых флагов (см. <a href="../flags/">флаги</a>).</li>
 <li><strong>Description</strong> - краткое описание.</li>
+</ul>
+<h2 id="режимы-адрессации">Режимы адрессации<a class="headerlink" href="#режимы-адрессации" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Absolute (Абсолютная)</strong> - addr = imm32</li>
+<li><strong>Index (Индексная)</strong> - addr = reg + reg</li>
+<li><strong>Indirect (Косвенная)</strong> - addr = reg</li>
+<li><strong>Index+disp (Индексная со смещением)</strong> - addr = reg + reg + disp8</li>
+<li><strong>Indirect+disp (Косвенная со смещением)</strong> - addr = reg + reg + disp8</li>
 </ul>
 <h2 id="полная-таблица">Полная таблица<a class="headerlink" href="#полная-таблица" title="Permanent link">&para;</a></h2>
 <table>
@@ -2865,7 +2895,7 @@
 <td>STR.B</td>
 <td>D2F</td>
 <td><code>--------</code></td>
-<td>Запись байта (flat)</td>
+<td>Запись байта (absolute)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2873,7 +2903,7 @@
 <td>STR.B</td>
 <td>D2S</td>
 <td><code>--------</code></td>
-<td>Запись байта (segment)</td>
+<td>Запись байта (index)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2881,7 +2911,7 @@
 <td>STR.B</td>
 <td>D2R</td>
 <td><code>--------</code></td>
-<td>Запись байта (register)</td>
+<td>Запись байта (indirect)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2889,7 +2919,7 @@
 <td>STR.B</td>
 <td>D2SD</td>
 <td><code>--------</code></td>
-<td>Запись байта (segment-disp)</td>
+<td>Запись байта (index+disp)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2897,7 +2927,7 @@
 <td>STR.B</td>
 <td>D2RD</td>
 <td><code>--------</code></td>
-<td>Запись байта (register-disp)</td>
+<td>Запись байта (indirect+disp)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2905,7 +2935,7 @@
 <td>STR.W</td>
 <td>D2F</td>
 <td><code>--------</code></td>
-<td>Запись слова (flat)</td>
+<td>Запись слова (absolute)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2913,7 +2943,7 @@
 <td>STR.W</td>
 <td>D2S</td>
 <td><code>--------</code></td>
-<td>Запись слова (segment)</td>
+<td>Запись слова (index)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2921,7 +2951,7 @@
 <td>STR.W</td>
 <td>D2R</td>
 <td><code>--------</code></td>
-<td>Запись слова (register)</td>
+<td>Запись слова (indirect)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2929,7 +2959,7 @@
 <td>STR.W</td>
 <td>D2SD</td>
 <td><code>--------</code></td>
-<td>Запись слова (segment-disp)</td>
+<td>Запись слова (index+disp)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2937,7 +2967,7 @@
 <td>STR.W</td>
 <td>D2RD</td>
 <td><code>--------</code></td>
-<td>Запись слова (register-disp)</td>
+<td>Запись слова (indirect+disp)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2945,7 +2975,7 @@
 <td>STR.DW</td>
 <td>D2F</td>
 <td><code>--------</code></td>
-<td>Запись dword (flat)</td>
+<td>Запись dword (absolute)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2953,7 +2983,7 @@
 <td>STR.DW</td>
 <td>D2S</td>
 <td><code>--------</code></td>
-<td>Запись dword (segment)</td>
+<td>Запись dword (index)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2961,7 +2991,7 @@
 <td>STR.DW</td>
 <td>D2R</td>
 <td><code>--------</code></td>
-<td>Запись dword (register)</td>
+<td>Запись dword (indirect)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2969,7 +2999,7 @@
 <td>STR.DW</td>
 <td>D2SD</td>
 <td><code>--------</code></td>
-<td>Запись dword (segment-disp)</td>
+<td>Запись dword (index+disp)</td>
 </tr>
 <tr>
 <td><code>22h</code></td>
@@ -2977,7 +3007,7 @@
 <td>STR.DW</td>
 <td>D2RD</td>
 <td><code>--------</code></td>
-<td>Запись dword (register-disp)</td>
+<td>Запись dword (indirect+disp)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -2985,7 +3015,7 @@
 <td>LOD.B</td>
 <td>D3F</td>
 <td><code>--------</code></td>
-<td>Чтение байта (flat)</td>
+<td>Чтение байта (absolute)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -2993,7 +3023,7 @@
 <td>LOD.B</td>
 <td>D3S</td>
 <td><code>--------</code></td>
-<td>Чтение байта (segment)</td>
+<td>Чтение байта (index)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3001,7 +3031,7 @@
 <td>LOD.B</td>
 <td>D3R</td>
 <td><code>--------</code></td>
-<td>Чтение байта (register)</td>
+<td>Чтение байта (indirect)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3009,7 +3039,7 @@
 <td>LOD.B</td>
 <td>D3SD</td>
 <td><code>--------</code></td>
-<td>Чтение байта (segment-disp)</td>
+<td>Чтение байта (index+disp)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3017,7 +3047,7 @@
 <td>LOD.B</td>
 <td>D3RD</td>
 <td><code>--------</code></td>
-<td>Чтение байта (register-disp)</td>
+<td>Чтение байта (indirect+disp)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3025,7 +3055,7 @@
 <td>LOD.W</td>
 <td>D3F</td>
 <td><code>--------</code></td>
-<td>Чтение слова (flat)</td>
+<td>Чтение слова (absolute)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3033,7 +3063,7 @@
 <td>LOD.W</td>
 <td>D3S</td>
 <td><code>--------</code></td>
-<td>Чтение слова (segment)</td>
+<td>Чтение слова (index)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3041,7 +3071,7 @@
 <td>LOD.W</td>
 <td>D3R</td>
 <td><code>--------</code></td>
-<td>Чтение слова (register)</td>
+<td>Чтение слова (indirect)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3049,7 +3079,7 @@
 <td>LOD.W</td>
 <td>D3SD</td>
 <td><code>--------</code></td>
-<td>Чтение слова (segment-disp)</td>
+<td>Чтение слова (index+disp)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3057,7 +3087,7 @@
 <td>LOD.W</td>
 <td>D3RD</td>
 <td><code>--------</code></td>
-<td>Чтение слова (register-disp)</td>
+<td>Чтение слова (indirect+disp)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3065,7 +3095,7 @@
 <td>LOD.DW</td>
 <td>D3F</td>
 <td><code>--------</code></td>
-<td>Чтение dword (flat)</td>
+<td>Чтение dword (absolute)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3073,7 +3103,7 @@
 <td>LOD.DW</td>
 <td>D3S</td>
 <td><code>--------</code></td>
-<td>Чтение dword (segment)</td>
+<td>Чтение dword (index)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3081,7 +3111,7 @@
 <td>LOD.DW</td>
 <td>D3R</td>
 <td><code>--------</code></td>
-<td>Чтение dword (register)</td>
+<td>Чтение dword (indirect)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3089,7 +3119,7 @@
 <td>LOD.DW</td>
 <td>D3SD</td>
 <td><code>--------</code></td>
-<td>Чтение dword (segment-disp)</td>
+<td>Чтение dword (index+disp)</td>
 </tr>
 <tr>
 <td><code>23h</code></td>
@@ -3097,7 +3127,7 @@
 <td>LOD.DW</td>
 <td>D3RD</td>
 <td><code>--------</code></td>
-<td>Чтение dword (register-disp)</td>
+<td>Чтение dword (indirect+disp)</td>
 </tr>
 <tr>
 <td><code>25h</code></td>

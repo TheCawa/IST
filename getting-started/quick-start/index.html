@@ -644,6 +644,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#6-выбор-bios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Выбор BIOS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-сохранение-последней-конфигурации" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Сохранение последней конфигурации
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2317,6 +2339,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#6-выбор-bios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Выбор BIOS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-сохранение-последней-конфигурации" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Сохранение последней конфигурации
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2343,25 +2387,27 @@
 <p>Создай файл <code>hello.asm</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">.ORG</span><span class="w"> </span><span class="mi">0x00060000</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">.TEXT</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nl">main:</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nf">LDI.DW</span><span class="w"> </span><span class="no">SP</span><span class="p">,</span><span class="w"> </span><span class="mi">0x00080000</span><span class="w">       </span><span class="c1">; указатель стека</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="nf">LDI.DW</span><span class="w"> </span><span class="no">IX</span><span class="p">,</span><span class="w"> </span><span class="no">msg</span><span class="w">              </span><span class="c1">; адрес строки</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="nf">CALL</span><span class="w"> </span><span class="no">print_string</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="nf">HALT</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nl">print_string:</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="nf">LOD.B</span><span class="w"> </span><span class="no">XL1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="no">IX</span><span class="p">]</span><span class="w">             </span><span class="c1">; читаем байт</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="nf">CMP.B</span><span class="w"> </span><span class="no">XL1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w">                </span><span class="c1">; конец строки?</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="nf">JMP.EQ</span><span class="w"> </span><span class="no">ps_done</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="nf">STR.B</span><span class="w"> </span><span class="no">XL1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">0x00020018</span><span class="p">]</span><span class="w">     </span><span class="c1">; TERM_OUT</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="nf">INC</span><span class="w"> </span><span class="no">IX</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="nf">JMA</span><span class="w"> </span><span class="no">print_string</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nl">ps_done:</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="nf">RET</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="na">.DATA</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nl">msg:</span><span class="w">    </span><span class="na">.db</span><span class="w"> </span><span class="s">&quot;Hello, World!&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0x0A</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nl">main:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nl">sign:</span><span class="w"> </span><span class="na">.dw</span><span class="w"> </span><span class="mi">0xB007AB1E</span><span class="w">                </span><span class="c1">; загрузочная сигнатура</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nl">stub:</span><span class="w"> </span><span class="na">.dw</span><span class="w"> </span><span class="mi">0x00000000</span><span class="w">                </span><span class="c1">; подпись диска</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="nf">LDI.DW</span><span class="w"> </span><span class="no">SP</span><span class="p">,</span><span class="w"> </span><span class="mi">0x00080000</span><span class="w">       </span><span class="c1">; указатель стека</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="nf">LDI.DW</span><span class="w"> </span><span class="no">IX</span><span class="p">,</span><span class="w"> </span><span class="no">msg</span><span class="w">              </span><span class="c1">; адрес строки</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="nf">CALL</span><span class="w"> </span><span class="no">print_string</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="nf">HALT</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nl">print_string:</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="nf">LOD.B</span><span class="w"> </span><span class="no">XL1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="no">IX</span><span class="p">]</span><span class="w">             </span><span class="c1">; читаем байт</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="nf">CMP.B</span><span class="w"> </span><span class="no">XL1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w">                </span><span class="c1">; конец строки?</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="nf">JMP.EQ</span><span class="w"> </span><span class="no">ps_done</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="nf">STR.B</span><span class="w"> </span><span class="no">XL1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">0x00020018</span><span class="p">]</span><span class="w">     </span><span class="c1">; TERM_OUT</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">        </span><span class="nf">INC</span><span class="w"> </span><span class="no">IX</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="nf">JMA</span><span class="w"> </span><span class="no">print_string</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nl">ps_done:</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">        </span><span class="nf">RET</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="na">.DATA</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nl">msg:</span><span class="w">    </span><span class="na">.db</span><span class="w"> </span><span class="s">&quot;Hello, World!&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span>
 </code></pre></div>
 <h2 id="2-собрать">2. Собрать<a class="headerlink" href="#2-собрать" title="Permanent link">&para;</a></h2>
 <p>Простейший вариант - сразу в плоский бинарник:</p>
@@ -2396,6 +2442,31 @@
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python<span class="w"> </span>LINK148.py<span class="w"> </span>hello.o<span class="w"> </span>-o<span class="w"> </span>hello.bin<span class="w"> </span>--entry<span class="w"> </span>main
 </code></pre></div>
 <p>Этот способ нужен, когда программа состоит из нескольких модулей и статических библиотек.</p>
+<h2 id="6-выбор-bios">6. Выбор BIOS<a class="headerlink" href="#6-выбор-bios" title="Permanent link">&para;</a></h2>
+<p>BIOS-образы лежат в <code>i80148\PC48\BIOS</code>. В эмуляторе открой вкладку <strong>BIOS</strong>:</p>
+<ul>
+<li>файлы группируются по моделям процессоров (имя подпапки: <code>i80148</code>, <code>i8046</code>, <code>i148</code>, <code>i248</code>, ...);</li>
+<li><strong>Rescan</strong> - перечитать папку после добавления файлов;</li>
+<li><strong>Current CPU only</strong> - показать только образы текущего процессора;</li>
+<li>двойной клик по образу или кнопка <strong>Load selected BIOS</strong> - загрузить и запустить BIOS.</li>
+</ul>
+<p>Поддерживаются только <code>.bin</code>-файлы. Структура папки описана в
+<code>i80148\PC48\BIOS\README.md</code>.</p>
+<h2 id="7-сохранение-последней-конфигурации">7. Сохранение последней конфигурации<a class="headerlink" href="#7-сохранение-последней-конфигурации" title="Permanent link">&para;</a></h2>
+<p>При выходе эмулятор записывает последнюю конфигурацию в <code>emulator.cfg</code> рядом
+с <code>emulator.exe</code>:</p>
+<ul>
+<li>модель процессора;</li>
+<li>видеокарта;</li>
+<li>последний BIOS;</li>
+<li>объём RAM и VRAM;</li>
+<li>образы дисков для каждого привода;</li>
+<li>разрешение, масштаб и цветовая глубина;</li>
+<li>режим скорости CPU.</li>
+</ul>
+<p>При следующем запуске всё это восстанавливается автоматически. Параметры
+командной строки (<code>--cpu</code>, <code>--vc</code>, <code>--bios</code>, <code>--ram</code>, <code>--vram</code>) имеют приоритет
+над сохранёнными значениями.</p>
 
 
 

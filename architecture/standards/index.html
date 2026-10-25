@@ -2279,55 +2279,110 @@
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a> -# EX1 - func; EX2 - arg1; EX3 - arg2; EX4 - arg3
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    0x49      - KBD-INT
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    0x50      - Video services
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>         0x00 - Set video mode
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>         0x01 - Set cursor shape
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    ����� ������, ����.
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    0x50      - Video services
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>         0x00 - Set video mode
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>         0x01 - Set cursor shape
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a> Calls:
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a> -# Example (read sector):
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a> -#     LDI.dw IX, 0x00060400   ; dest
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a> -#     LDI.dw EX2, 1   ; #1 sector
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a> -#     LDI.dw EX3, 8   ; 8 sectors
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a> -#     LOD.dw A1, [0x000300104] ; rd_disk
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a> -#     CALLR A1
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    0x00030104 - Read disk (IX - dest; EX2 - LBA ptr; EX3 - LBA ctr)
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    0x00030108 - Write disk (IX - src; EX2 - LBA ptr; EX3 - LBA ctr)
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>    0x0004FC00 - Video service (EX1 - func; EX2 - arg1; EX3 - arg2; EX4 - arg3)
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    0x0004FC04 - Disk services (EX1 - func; IX - dest/src; EX2 - LBA ptr; EX3 - LBA ctr)
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    0x0004FC08 - Serial port services
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    0x0004FC0C - Parallel port services
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    0x0004FC10 - Kbd services
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    0x0004FC14 - XPB services
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    0x0004FC18-0x0004FDFC - Reserved
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    0x0004FE00-0x0004FFFC - System calls
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a> BOOTLOAD
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a> --------
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a> BIOS load 1 sector (1024b) in memory (0x00060000)
-<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>
-<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a> SCROLL=OFF
-<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a> CURSOR=OFF
-<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a> VC_MODE=0x00 (80x25; 16 colors)
-<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a> TERM_ATTR=0x07
-<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>
-<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>CASM148:
-<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>    PUSH EX1
-<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>    PUSH A7
-<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>    LDI.dw A7, 0x00020019
-<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>    LDI.b XL1, 0x01
-<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>    STR.b XL1, [A7]
-<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>    STR.b R0, [A7+1]
-<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>    LDI.b XL1, 0x07
-<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>    STR.b XL1, [A7+2]
-<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>    LDI.b XL1, 0x03
-<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>    STR.b XL1, [A7]
-<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>    LDI.b XL1, 0x05
-<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>    STR.b XL1, [A7]
-<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>    POP A7
-<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>    POP EX1
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    0x51      - Disk services
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>         0x00 - Get disk parameters
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>         0x01 - Read sector
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>         0x02 - Write sector
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    !!! Not done yet !!!
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a> Calls:
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a> -# Example (read sector):
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a> -#     LDI.dw IX, 0x00060400   ; dest
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a> -#     LDI.dw EX2, 1   ; #1 sector
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a> -#     LDI.dw EX3, 8   ; 8 sectors
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a> -#     LOD.dw A1, [0x000300104] ; rd_disk
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a> -#     CALLR A1
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    0x00030104 - Read disk (IX - dest; EX2 - LBA ptr; EX3 - LBA ctr)
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    0x00030108 - Write disk (IX - src; EX2 - LBA ptr; EX3 - LBA ctr)
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    0x0004FC00 - Video service (EX1 - func; EX2 - arg1; EX3 - arg2; EX4 - arg3)
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>    0x0004FC04 - Disk services (EX1 - func; IX - dest/src; EX2 - LBA ptr; EX3 - LBA ctr)
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    0x0004FC08 - Serial port services
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    0x0004FC0C - Parallel port services
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    0x0004FC10 - Kbd services
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>    0x0004FC14 - XPB services
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>    0x0004FC18-0x0004FDFC - Reserved
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>    0x0004FE00-0x0004FFFC - System calls
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a> BOOTLOAD
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a> --------
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a> BIOS load 1 sector (1024b) in memory (0x00060000) and jumps to 0x00060008, because 0x00060000-0x00060007 means signature
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a> SCROLL=OFF
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a> CURSOR=OFF
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a> VC_MODE=0x00 (80x25; 16 colors)
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a> TERM_ATTR=0x07
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>CASM148:
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>    CLI
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>    LDI.dw BP, 0xB007AB1E
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>    PUSH EX1
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>    PUSH A7
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>    LDI.dw A7, 0x00020019
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>    LDI.b XL1, 0x01
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>    STR.b XL1, [A7]
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>    STR.b R0, [A7+1]
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>    LDI.b XL1, 0x07
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>    STR.b XL1, [A7+2]
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>    LDI.b XL1, 0x03
+<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>    STR.b XL1, [A7]
+<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>    LDI.b XL1, 0x05
+<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>    STR.b XL1, [A7]
+<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>    POP A7
+<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>    POP EX1
+<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>
+<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a> CMOS
+<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a> ----
+<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a> 0x00010000-0x000103FF (1024b; 4 bytes per vector; 256 vectors) - IDT (Interupt descriptor table)
+<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a> 0x00010400-0x000107FF (1024b; 4 bytes per vector; 256 vectors) - DLT (Device list table)
+<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a> 0x00010800-0x00010DFF (1024b; 8 bytes per vector; 128 vectors) - DDL (Disk Drive list)
+<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a> 0x00010C00-0x0001FFFF (62464b) - BIOS settings
+<a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>
+<a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>
+<a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a> IDT vector: bytes 3-0 = service address
+<a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a> DLT vector: byte #0 = Flags, byte #1 = Device class (Did), byte #2 = Vendor ID (Vid), byte #3 = ?
+<a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a> DDL vector: bytes 3-0 = disk capacity (in sectors), byte #4 = Flags, bytes 5-7 = Reserved
+<a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>
+<a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a> BIOS Settings (Example: FBIOS):
+<a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>    -# Addr = Base:Offset
+<a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a>    -# Base = 0x00010C00
+<a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a>
+<a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>    Offset - Ending - Length - Type   - Name
+<a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a>
+<a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a>    0x0000 - 0x001F - 32b    - string - BIOS Password
+<a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a>    0x0020 - 0x0023 - 4b     - bitmap - BIOS Parameters
+<a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a>    0x0024 - 0x0033 - 16b    - uint8  - Boot sequence
+<a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a>
+<a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a> Loading &amp; Saving CMOS
+<a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a> ---------------------
+<a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a> When you enter in setup: Copy memory block from 0x00010C00 to &lt;dest&gt;
+<a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a>    (Number of bytes = Size of your CMOS settings; For example, it&#39;s 44 bytes for FBIOS: 32 bytes = password; 4 bytes = parameters; 16 bytes = boot sequence)
+<a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a>    (While you change parameters, they save in &lt;dest&gt; area, and it flush to 0x00010C00 only when you save changes and exit from setup)
+<a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a>
+<a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a> When you exit setup with saving: Copy memory block from &lt;dest&gt; to 0x00010C00
+<a id="__codelineno-0-116" name="__codelineno-0-116" href="#__codelineno-0-116"></a>    (Number of bytes = Size of your CMOS settings; For example, it&#39;s 36 bytes for FBIOS: 32 bytes = password; 4 bytes = parameters; 8 bytes = boot sequence)
+<a id="__codelineno-0-117" name="__codelineno-0-117" href="#__codelineno-0-117"></a>
+<a id="__codelineno-0-118" name="__codelineno-0-118" href="#__codelineno-0-118"></a>
+<a id="__codelineno-0-119" name="__codelineno-0-119" href="#__codelineno-0-119"></a> BIOS BOOT SIGNATYRE
+<a id="__codelineno-0-120" name="__codelineno-0-120" href="#__codelineno-0-120"></a> -------------------
+<a id="__codelineno-0-121" name="__codelineno-0-121" href="#__codelineno-0-121"></a>    B0 07 AB 1E XX XX XX XX
+<a id="__codelineno-0-122" name="__codelineno-0-122" href="#__codelineno-0-122"></a>
+<a id="__codelineno-0-123" name="__codelineno-0-123" href="#__codelineno-0-123"></a> Insert these 8 bytes at the very beginning (sector 0) of the disk to designate it as bootable.
+<a id="__codelineno-0-124" name="__codelineno-0-124" href="#__codelineno-0-124"></a> The first 4 bytes (B0 07 AB 1E) represent a magic constant used by the BIOS to determine 
+<a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a> whether the disk is bootable.
+<a id="__codelineno-0-126" name="__codelineno-0-126" href="#__codelineno-0-126"></a>
+<a id="__codelineno-0-127" name="__codelineno-0-127" href="#__codelineno-0-127"></a> The next 4 bytes (XX XX XX XX) are reserved for disk signatures, like FS, OS or bootloader
+<a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a>
+<a id="__codelineno-0-129" name="__codelineno-0-129" href="#__codelineno-0-129"></a> BIOS must jump to 0x00060008!
+<a id="__codelineno-0-130" name="__codelineno-0-130" href="#__codelineno-0-130"></a>
+<a id="__codelineno-0-131" name="__codelineno-0-131" href="#__codelineno-0-131"></a> .p.s. 0xB007AB1E in hexspeak means &quot;BOOTABLE&quot;
 </code></pre></div>
 
 
