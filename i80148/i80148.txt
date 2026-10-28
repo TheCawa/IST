@@ -18,7 +18,7 @@
 	-# Input instructions bus: 	 64 bit (8 Bytes);
 	-# Memory model: 			 Flat;
 	-# Memory addressing modes:  Flat (imm32), Index (Base:Offset), Indirect (reg), 
-								 Index-disp (Base:Offset:disp), Indirect-disp (reg:disp);
+								 Index-disp (Base:Offset+disp), Indirect-disp (reg+disp);
 	-# Insts. addressing modes:  Flag (IC=imm32), Relative (IC+imm32), Indirect (IC=reg).
 
 Registers:
