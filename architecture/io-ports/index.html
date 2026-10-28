@@ -2549,7 +2549,7 @@
 <td><code>00020007h</code></td>
 <td>R/W</td>
 <td><code>BANK</code></td>
-<td>Селектор банка VRAM</td>
+<td>Страница окна VRAM в 64 КБ (<code>0</code> — следовать за <code>TERM_BUFFER</code>)</td>
 </tr>
 <tr>
 <td><code>0008h</code></td>
@@ -2689,7 +2689,7 @@
 <td><code>00020070h</code></td>
 <td>R/W</td>
 <td><code>TERM_BUFFER</code></td>
-<td>Базовое смещение VRAM</td>
+<td>База отображения VRAM (и база окна, пока <code>BANK = 0</code>)</td>
 </tr>
 </tbody>
 </table>

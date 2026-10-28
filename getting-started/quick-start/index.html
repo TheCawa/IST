@@ -2419,9 +2419,20 @@
 <li><code>hello.hex</code> - Logisim hex формата <code>v2.0 raw</code>.</li>
 </ul>
 <p>Ассемблер выведет что-то вроде:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>26 bytes collected. Labels: {&#39;MAIN&#39;: 327680, &#39;PRINT_STRING&#39;: 327690, &#39;PS_DONE&#39;: 327706}
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Segments: text=32, data=14, bss=0
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Written: hello.bin and hello.hex
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>68 bytes collected
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>======================
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a> Labels
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>======================
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>MAIN         : 0x60000
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>SIGN         : 0x60000
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>STUB         : 0x60002
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>PRINT_STRING : 0x60018
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>PS_DONE      : 0x60035
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>MSG          : 0x60036
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Sections: Text = 54; Data = 14; BSS = 0
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Output: hello.bin and hello.hex
 </code></pre></div>
 <h2 id="3-запустить-в-эмуляторе">3. Запустить в эмуляторе<a class="headerlink" href="#3-запустить-в-эмуляторе" title="Permanent link">&para;</a></h2>
 <p>Эмулятор находится в <code>emulator\dist\emulator.exe</code> (Сборках пока что только под Windows), запустите его, в вкладке FILE выбираем пункт Open Disk Image... и выбираем наш <code>hello.bin</code>.</p>
