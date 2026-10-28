@@ -273,6 +273,36 @@ def write_logisim_hex(filename, data):
                 f.write(' ')
         f.write('\n')
 
+def format_label_report(headline, labels, sections, output):
+    """Build an aligned, human-readable assembly report.
+
+    headline - first line, e.g. '105 bytes collected'
+    labels   - iterable of (name, location) pairs, already formatted
+    sections - iterable of (name, size) pairs in display order
+    output   - short description of the produced files
+    """
+    rows = list(labels)
+    if rows:
+        name_width = max(len(name) for name, _ in rows)
+        rows = [f"{name:<{name_width}} : {location}" for name, location in rows]
+    else:
+        rows = [' (no labels)']
+    width = max([len('Labels') + 2] + [len(row) for row in rows])
+    rule = '=' * width
+    report = [headline, '', rule, ' Labels', rule]
+    report.extend(rows)
+    report.append('')
+    report.append('Sections: ' + '; '.join(f"{name} = {size}" for name, size in sections))
+    report.append(f"Output: {output}")
+    return '\n'.join(report)
+
+def format_symbol_location(symbol):
+    """Render an object-file symbol as 'section+0xOFFSET' or 'extern'."""
+    section = symbol.get('section')
+    if symbol.get('undefined') or section is None:
+        return 'extern'
+    return f"{section}+0x{symbol.get('offset', 0):04X}"
+
 class Assembler:
     def __init__(self):
         self.labels = {}
@@ -1167,20 +1197,38 @@ def main():
         if compile_only:
             obj = asm.compile(source)
             Assembler.write_object(out_file, obj, obj_format)
-            print(f"{len(obj['sections']['text']['data'])} bytes text, "
-                  f"{len(obj['sections']['data']['data'])} bytes data, "
-                  f"{obj['sections']['bss']['size']} bytes bss")
-            print(f"Labels: {list(obj['symbols'].keys())}")
-            print(f"Written: {out_file} ({obj_format})")
+
+            sizes = {
+                'text': len(obj['sections']['text']['data']),
+                'data': len(obj['sections']['data']['data']),
+                'bss': obj['sections']['bss']['size'],
+            }
+            section_order = {name: i for i, name in enumerate(SEGMENTS)}
+            symbols = sorted(
+                obj['symbols'].items(),
+                key=lambda item: (section_order.get(item[1].get('section'), len(SEGMENTS)),
+                                  item[1].get('offset', 0), item[0])
+            )
+            print(format_label_report(
+                f"{sum(sizes.values())} bytes compiled",
+                [(name, format_symbol_location(sym)) for name, sym in symbols],
+                [('Text', sizes['text']), ('Data', sizes['data']), ('BSS', sizes['bss'])],
+                f"{out_file} ({obj_format})",
+            ))
         else:
             code = asm.assemble(source)
             with open(out_file, 'wb') as f:
                 f.write(bytes(code))
             hex_file = out_file.rsplit('.', 1)[0] + '.hex'
             write_logisim_hex(hex_file, code)
-            print(f"{len(code)} bytes collected. Labels: {asm.labels}")
-            print(f"Segments: text={len(asm.segments['text'])}, data={len(asm.segments['data'])}, bss={len(asm.segments['bss'])}")
-            print(f"Written: {out_file} and {hex_file}")
+            print(format_label_report(
+                f"{len(code)} bytes collected",
+                [(name, f"0x{addr:05X}") for name, addr in sorted(asm.labels.items(), key=lambda item: item[1])],
+                [('Text', len(asm.segments['text'])),
+                 ('Data', len(asm.segments['data'])),
+                 ('BSS', len(asm.segments['bss']))],
+                f"{out_file} and {hex_file}",
+            ))
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)

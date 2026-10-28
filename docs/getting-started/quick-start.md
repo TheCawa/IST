@@ -48,9 +48,20 @@ python CASM148.py hello.asm -o hello.bin
 Ассемблер выведет что-то вроде:
 
 ```text
-26 bytes collected. Labels: {'MAIN': 327680, 'PRINT_STRING': 327690, 'PS_DONE': 327706}
-Segments: text=32, data=14, bss=0
-Written: hello.bin and hello.hex
+68 bytes collected
+
+======================
+ Labels
+======================
+MAIN         : 0x60000
+SIGN         : 0x60000
+STUB         : 0x60002
+PRINT_STRING : 0x60018
+PS_DONE      : 0x60035
+MSG          : 0x60036
+
+Sections: Text = 54; Data = 14; BSS = 0
+Output: hello.bin and hello.hex
 ```
 
 ## 3. Запустить в эмуляторе

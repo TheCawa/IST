@@ -151,6 +151,29 @@ def write_logisim_hex(filename, data):
                 f.write(' ')
         f.write('\n')
 
+def format_label_report(headline, labels, sections, output):
+    """Build an aligned, human-readable assembly report.
+
+    headline - first line, e.g. '105 bytes collected'
+    labels   - iterable of (name, location) pairs, already formatted
+    sections - iterable of (name, size) pairs in display order
+    output   - short description of the produced files
+    """
+    rows = list(labels)
+    if rows:
+        name_width = max(len(name) for name, _ in rows)
+        rows = [f"{name:<{name_width}} : {location}" for name, location in rows]
+    else:
+        rows = [' (no labels)']
+    width = max([len('Labels') + 2] + [len(row) for row in rows])
+    rule = '=' * width
+    report = [headline, '', rule, ' Labels', rule]
+    report.extend(rows)
+    report.append('')
+    report.append('Sections: ' + '; '.join(f"{name} = {size}" for name, size in sections))
+    report.append(f"Output: {output}")
+    return '\n'.join(report)
+
 class Assembler:
     def __init__(self):
         self.labels = {}
@@ -729,9 +752,14 @@ def main():
     hex_file = out_file.rsplit('.', 1)[0] + '.hex'
     write_logisim_hex(hex_file, code)
 
-    print(f"{len(code)} bytes collected. Labels: {asm.labels}")
-    print(f"Segments: text={len(asm.segments['text'])}, data={len(asm.segments['data'])}, bss={len(asm.segments['bss'])}")
-    print(f"Written: {out_file} and {hex_file}")
+    print(format_label_report(
+        f"{len(code)} bytes collected",
+        [(name, f"0x{addr:05X}") for name, addr in sorted(asm.labels.items(), key=lambda item: item[1])],
+        [('Text', len(asm.segments['text'])),
+         ('Data', len(asm.segments['data'])),
+         ('BSS', len(asm.segments['bss']))],
+        f"{out_file} and {hex_file}",
+    ))
 
 if __name__ == '__main__':
     main()
