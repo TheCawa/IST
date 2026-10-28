@@ -44,6 +44,9 @@ void cpu_init_i80148(Cpu* cpu) {
         memset(cpu->backend_data, 0, sizeof(i80148_State));
     }
     cpu->term_buffer = 0;
+    if (cpu->mem && VRAM_BANK_REG_I80148 < cpu->mem_size) {
+        cpu->mem[VRAM_BANK_REG_I80148] = 0; // BANK: window follows TERM_BUFFER
+    }
     cpu->term_attr = 0x00000007;  // fg=7 (white), bg=0 (black)
     cpu->term_res_x = TERM_COLS_I80148;
     cpu->term_res_y = TERM_ROWS_I80148;
@@ -72,6 +75,9 @@ void cpu_reset_i80148(Cpu* cpu) {
     cpu->irq_enabled = false;
     cpu->screen_dirty = true;
     cpu->term_buffer = 0;
+    if (cpu->mem && VRAM_BANK_REG_I80148 < cpu->mem_size) {
+        cpu->mem[VRAM_BANK_REG_I80148] = 0; // BANK: window follows TERM_BUFFER
+    }
     cpu->term_attr = 0x00000007;
     cpu->term_res_x = TERM_COLS_I80148;
     cpu->term_res_y = TERM_ROWS_I80148;
@@ -144,12 +150,42 @@ uint64_t cpu_get_reg_i80148(Cpu* cpu, uint8_t idx) {
     return state(cpu)->regs[idx] & MODE_MASKS[mode];
 }
 
-// Translate a VRAM window address (0x00050000..0x0005FFFF) into an offset
-// inside cpu->vram using the current TERM_BUFFER base.
+// VRAM window helpers. The CPU sees VRAM through a 64 KB window; the page is
+// selected by BANK (0x00020007), with 0 meaning "follow TERM_BUFFER".
+//
+// Number of 64 KB pages in VRAM (0 when VRAM is absent).
+static inline uint32_t vram_bank_count(Cpu* cpu) {
+    if (!cpu || cpu->vram_size == 0) return 0;
+    return (uint32_t)(cpu->vram_size / VRAM_WINDOW_SIZE);
+}
+
+// Raw BANK register value (0x00020007). Stored in normal RAM, like other
+// simple MMIO latches, so it survives machine state save/load for free.
+static inline uint8_t vram_bank_raw(Cpu* cpu) {
+    if (!cpu || !cpu->mem || VRAM_BANK_REG_I80148 >= cpu->mem_size) return 0;
+    return cpu->mem[VRAM_BANK_REG_I80148];
+}
+
+// Base offset of the CPU's 64 KB VRAM window.
+// BANK = 0 keeps the legacy behaviour: the window follows TERM_BUFFER, so
+// software that pages VRAM by moving TERM_BUFFER keeps working. BANK = N > 0
+// selects page N explicitly, which lets the CPU write the whole 512 KB
+// without moving the displayed image.
+static inline uint32_t vram_window_base(Cpu* cpu) {
+    if (!cpu || cpu->vram_size == 0) return 0;
+
+    uint32_t pages = vram_bank_count(cpu);
+    uint32_t bank = pages ? (uint32_t)(vram_bank_raw(cpu) % pages) : 0;
+    if (bank == 0) {
+        return (uint32_t)((uint64_t)cpu->term_buffer % cpu->vram_size);
+    }
+    return bank * VRAM_WINDOW_SIZE;
+}
+
 static inline uint32_t vram_window_translate(Cpu* cpu, uint32_t addr) {
     if (!cpu || cpu->vram_size == 0) return 0;
 
-    uint64_t off = (uint64_t)cpu->term_buffer + (addr - VRAM_WINDOW_BASE);
+    uint64_t off = (uint64_t)vram_window_base(cpu) + (addr - VRAM_WINDOW_BASE);
     return (uint32_t)(off % cpu->vram_size);
 }
 
@@ -210,6 +246,9 @@ uint64_t cpu_read_mem_i80148(Cpu* cpu, uint32_t addr, int mode) {
     }
     if (addr == TERM_BUFFER_ADDR_I80148) {
         return cpu->term_buffer & MODE_MASKS[mode];
+    }
+    if (addr == VRAM_BANK_REG_I80148) {
+        return vram_bank_raw(cpu) & MODE_MASKS[mode];
     }
     if (mode == MODE_BYTE && addr == KBD_ASCII_ADDR_I80148) {
         return kbd_read_ascii((Cpu*)cpu);
@@ -364,6 +403,15 @@ void cpu_write_mem_i80148(Cpu* cpu, uint32_t addr, uint64_t val, int mode) {
     if (addr == TERM_BUFFER_ADDR_I80148) {
         cpu->term_buffer = (uint32_t)(val & 0xFFFFFFFF);
         cpu->screen_dirty = true;
+        return;
+    }
+    if (addr == VRAM_BANK_REG_I80148) {
+        // VRAM window page. Access size is ignored (like other MMIO latches):
+        // the register is 8-bit, so a dword store cannot clobber KBD_CTRL.
+        uint32_t pages = vram_bank_count(cpu);
+        uint32_t bank = (uint32_t)(val & 0xFF);
+        if (pages) bank %= pages;
+        if (addr < cpu->mem_size) cpu->mem[addr] = (uint8_t)bank;
         return;
     }
     if (addr == VC_MODE_ADDR_I80148) {

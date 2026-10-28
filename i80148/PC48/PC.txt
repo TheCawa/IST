@@ -15,9 +15,10 @@ Memory regions:
     00060000h - FFFFFFFFh - 00h - USER RAM
     
     VRAM: separate video memory, size configurable (default 512 KB). The CPU sees it
-    through the VRAM WINDOW at 0x00050000..0x0005FFFF. The base offset inside VRAM is
-    selected by TERM_BUFFER (0x00020070). The video card reads the same VRAM at the
-    same TERM_BUFFER offset.
+    through the VRAM WINDOW at 0x00050000..0x0005FFFF. The 64 KB page shown in the
+    window is selected by BANK (0x00020007); BANK = 0 makes the window follow
+    TERM_BUFFER (legacy behaviour). The video card always displays from TERM_BUFFER
+    (0x00020070), so paging with BANK does not move the picture.
 
 	-# IMPORTANT! Regions 00030000h-0003FFFFh, 00040000h-0004FFFFh and 00060000h-FFFFFFFFh it's more like it's just formalized!
 	
@@ -35,7 +36,7 @@ I/O registers map:
 	0004h - 00020004h - R   - TIMER_LOW     - formal
 	0005h - 00020005h - R 	- TIMER_HIGH    - formal
 	0006h - 00020006h - R   - UPTIME        - formal
-	0007h - 00020007h - R/W - BANK          - VRAM bank selector
+	0007h - 00020007h - R/W - BANK          - VRAM window page (0 = follow TERM_BUFFER)
 	
 	0008h - 00020008h - R/W - KBD_CTRL      - formal
 	0009h - 00020009h - R   - KBD_SCANCODE  - next buffered scancode (PC set-1); read consumes the slot
@@ -68,7 +69,7 @@ U   0019h - 00020019h - W   - TERM_COMMAND - terminal commands (0x01=clear, 0x02
 	0064h - 00020064h - R   - TERM_RES_Y    - 32-bit visible height (text rows or gfx pixels)
 	0068h - 00020068h - R/W - TERM_POS_X    - 32-bit cursor X
 	006Ch - 0002006Ch - R/W - TERM_POS_Y    - 32-bit cursor Y
-	0070h - 00020070h - R/W - TERM_BUFFER   - 32-bit VRAM base offset for the CPU window/video card
+	0070h - 00020070h - R/W - TERM_BUFFER   - 32-bit VRAM display base (also the window base while BANK = 0)
 	0021h - 00020021h - R   - RTC_MIN
 	0022h - 00020022h - R   - RTC_HOUR
 	0023h - 00020023h - R   - RTC_DAY

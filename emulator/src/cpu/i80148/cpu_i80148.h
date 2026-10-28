@@ -111,7 +111,7 @@ typedef CpuMode_i80148 CpuMode;
 #define KBD_SCANCODE_ADDR_I80148 0x00020009
 #define KBD_MODIFIER_ADDR_I80148 0x0002000A
 #define MEM_SIZE_ADDR_I80148    0x0002000C
-#define VRAM_BANK_REG_I80148    0x00020007  // video memory bank selector (legacy)
+#define VRAM_BANK_REG_I80148    0x00020007  // VRAM window page (0 = follow TERM_BUFFER)
 #define VBUFFER_BASE_I80148     0x00100000  // physical VRAM base (legacy, now in separate vram buffer)
 #define VRAM_WINDOW_BASE        0x00050000  // MMIO window into VRAM
 #define VRAM_WINDOW_SIZE        0x00010000  // 64 KB window
