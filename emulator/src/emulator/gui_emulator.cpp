@@ -86,6 +86,98 @@ static size_t g_desired_vram_kb = 0;
 // Video color depth: 4 = 16 colors, 8 = 256 colors (VGA).
 static int g_color_depth = 8;
 
+// UI theme. Stored in emulator.cfg, applied on start and switchable at runtime.
+enum EmuTheme {
+    EMU_THEME_LIGHT = 0,
+    EMU_THEME_DARK  = 1
+};
+static int g_theme = EMU_THEME_LIGHT;
+
+// Green used for status messages; the light-theme green is unreadable on dark.
+static ImVec4 emu_success_color() {
+    return (g_theme == EMU_THEME_DARK) ? ImVec4(0.36f, 0.78f, 0.36f, 1.0f)
+                                       : ImVec4(0.15f, 0.45f, 0.15f, 1.0f);
+}
+
+// Red used for error messages.
+static ImVec4 emu_error_color() {
+    return (g_theme == EMU_THEME_DARK) ? ImVec4(1.00f, 0.42f, 0.42f, 1.0f)
+                                       : ImVec4(0.80f, 0.10f, 0.10f, 1.0f);
+}
+
+// Apply the selected theme to the current ImGui context. Can be called at
+// runtime: ImGui re-reads the style every frame.
+static void emu_apply_theme(int theme) {
+    ImGuiStyle& style = ImGui::GetStyle();
+
+    if (theme != EMU_THEME_DARK) {
+        ImGui::StyleColorsLight();
+        return;
+    }
+
+    ImGui::StyleColorsDark();
+
+    // VS Code "Dark+" inspired palette.
+    const ImVec4 bg          = ImVec4(0.118f, 0.118f, 0.118f, 1.00f); // #1E1E1E
+    const ImVec4 panel       = ImVec4(0.145f, 0.145f, 0.149f, 1.00f); // #252526
+    const ImVec4 border      = ImVec4(0.235f, 0.235f, 0.235f, 1.00f); // #3C3C3C
+    const ImVec4 frame       = ImVec4(0.165f, 0.176f, 0.180f, 1.00f); // #2A2D2E
+    const ImVec4 frame_hover = ImVec4(0.200f, 0.216f, 0.220f, 1.00f);
+    const ImVec4 accent      = ImVec4(0.000f, 0.478f, 0.800f, 1.00f); // #007ACC
+    const ImVec4 accent_dim  = ImVec4(0.035f, 0.278f, 0.443f, 1.00f); // #094771
+    const ImVec4 text        = ImVec4(0.800f, 0.800f, 0.800f, 1.00f); // #CCCCCC
+    const ImVec4 text_dim    = ImVec4(0.431f, 0.463f, 0.510f, 1.00f); // #6E7681
+
+    ImVec4* c = style.Colors;
+    c[ImGuiCol_Text]                 = text;
+    c[ImGuiCol_TextDisabled]         = text_dim;
+    c[ImGuiCol_WindowBg]             = bg;
+    c[ImGuiCol_ChildBg]              = bg;
+    c[ImGuiCol_PopupBg]              = panel;
+    c[ImGuiCol_Border]               = border;
+    c[ImGuiCol_BorderShadow]         = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+    c[ImGuiCol_FrameBg]              = frame;
+    c[ImGuiCol_FrameBgHovered]       = frame_hover;
+    c[ImGuiCol_FrameBgActive]        = accent_dim;
+    c[ImGuiCol_TitleBg]              = panel;
+    c[ImGuiCol_TitleBgActive]        = frame;
+    c[ImGuiCol_TitleBgCollapsed]     = panel;
+    c[ImGuiCol_MenuBarBg]            = panel;
+    c[ImGuiCol_ScrollbarBg]          = bg;
+    c[ImGuiCol_ScrollbarGrab]        = ImVec4(0.290f, 0.290f, 0.290f, 1.00f);
+    c[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.350f, 0.350f, 0.350f, 1.00f);
+    c[ImGuiCol_ScrollbarGrabActive]  = ImVec4(0.420f, 0.420f, 0.420f, 1.00f);
+    c[ImGuiCol_CheckMark]            = text;
+    c[ImGuiCol_SliderGrab]           = accent;
+    c[ImGuiCol_SliderGrabActive]     = ImVec4(0.102f, 0.596f, 0.925f, 1.00f);
+    c[ImGuiCol_Button]               = ImVec4(0.184f, 0.184f, 0.192f, 1.00f);
+    c[ImGuiCol_ButtonHovered]        = frame_hover;
+    c[ImGuiCol_ButtonActive]         = accent_dim;
+    c[ImGuiCol_Header]               = frame;
+    c[ImGuiCol_HeaderHovered]        = frame_hover;
+    c[ImGuiCol_HeaderActive]         = accent_dim;
+    c[ImGuiCol_Separator]            = border;
+    c[ImGuiCol_SeparatorHovered]     = accent;
+    c[ImGuiCol_SeparatorActive]      = accent;
+    c[ImGuiCol_ResizeGrip]           = ImVec4(0.290f, 0.290f, 0.290f, 0.60f);
+    c[ImGuiCol_ResizeGripHovered]    = accent;
+    c[ImGuiCol_ResizeGripActive]     = accent;
+    c[ImGuiCol_Tab]                  = panel;
+    c[ImGuiCol_TabHovered]           = frame_hover;
+    c[ImGuiCol_TabSelected]          = bg;
+    c[ImGuiCol_TabSelectedOverline]  = accent;
+    c[ImGuiCol_TabDimmed]            = panel;
+    c[ImGuiCol_TabDimmedSelected]    = bg;
+    c[ImGuiCol_TabDimmedSelectedOverline] = ImVec4(0.400f, 0.400f, 0.400f, 1.00f);
+    c[ImGuiCol_TableHeaderBg]        = panel;
+    c[ImGuiCol_TableBorderStrong]    = border;
+    c[ImGuiCol_TableBorderLight]     = ImVec4(0.180f, 0.180f, 0.180f, 1.00f);
+    c[ImGuiCol_TableRowBg]           = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+    c[ImGuiCol_TableRowBgAlt]        = ImVec4(1.0f, 1.0f, 1.0f, 0.03f);
+    c[ImGuiCol_TextSelectedBg]       = accent_dim;
+    c[ImGuiCol_NavCursor]            = accent;
+}
+
 // -----------------------------------------------------------------------------
 // BIOS browser state (files under i80148/PC48/BIOS/<cpu-model>/*.bin).
 // -----------------------------------------------------------------------------
@@ -217,6 +309,7 @@ void emulator_config_defaults(EmulatorConfig* cfg) {
     cfg->display_height = 400;
     cfg->display_scale = 1.0f;
     cfg->color_depth = 8;
+    cfg->theme = EMU_THEME_LIGHT;
     cfg->speed_mode = CPU_SPEED_ADAPTIVE;
     cfg->fixed_steps = 50;
     cfg->max_steps = 100000;
@@ -271,6 +364,8 @@ bool emulator_config_load(EmulatorConfig* cfg) {
             cfg->display_scale = (float)atof(val);
         } else if (strcmp(key, "color_depth") == 0) {
             cfg->color_depth = atoi(val);
+        } else if (strcmp(key, "theme") == 0) {
+            cfg->theme = atoi(val);
         } else if (strcmp(key, "speed_mode") == 0) {
             cfg->speed_mode = atoi(val);
         } else if (strcmp(key, "fixed_steps") == 0) {
@@ -311,6 +406,7 @@ bool emulator_config_save(const EmulatorConfig* cfg) {
     fprintf(f, "display_height=%d\n", cfg->display_height);
     fprintf(f, "display_scale=%.3f\n", cfg->display_scale);
     fprintf(f, "color_depth=%d\n", cfg->color_depth);
+    fprintf(f, "theme=%d\n", cfg->theme);
     fprintf(f, "speed_mode=%d\n", cfg->speed_mode);
     fprintf(f, "fixed_steps=%d\n", cfg->fixed_steps);
     fprintf(f, "max_steps=%d\n", cfg->max_steps);
@@ -335,6 +431,7 @@ void emulator_apply_config(const EmulatorConfig* cfg) {
     if (scale > 0.0f) g_display_scale = scale;
 
     g_color_depth = (cfg->color_depth == 4) ? 4 : 8;
+    g_theme = (cfg->theme == EMU_THEME_DARK) ? EMU_THEME_DARK : EMU_THEME_LIGHT;
 
     int speed = cfg->speed_mode;
     if (speed < CPU_SPEED_ADAPTIVE) speed = CPU_SPEED_ADAPTIVE;
@@ -373,6 +470,7 @@ void emulator_capture_config(EmulatorConfig* cfg, const Cpu* cpu) {
     cfg->display_height = g_display_height;
     cfg->display_scale = g_display_scale;
     cfg->color_depth = g_color_depth;
+    cfg->theme = g_theme;
     cfg->speed_mode = (int)g_cpu_speed_mode;
     cfg->fixed_steps = g_cpu_fixed_steps;
     cfg->max_steps = g_cpu_max_steps;
@@ -540,7 +638,7 @@ bool emulator_init(SDL_Window** out_window, SDL_Renderer** out_renderer, const V
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui::StyleColorsLight();
+    emu_apply_theme(g_theme);
 
     ImGui_ImplSDL2_InitForSDLRenderer(g_window, renderer);
     ImGui_ImplSDLRenderer2_Init(renderer);
@@ -979,7 +1077,7 @@ static void render_bios_tab(Cpu* cpu, std::vector<uint8_t>& memory,
     ImGui::Checkbox("Current CPU only", &g_bios_only_current);
 
     if (g_bios_status[0]) {
-        ImGui::TextColored(ImVec4(0.15f, 0.45f, 0.15f, 1.0f), "%s", g_bios_status);
+        ImGui::TextColored(emu_success_color(), "%s", g_bios_status);
     }
 
     ImGui::Separator();
@@ -1271,6 +1369,22 @@ void emulator_render(Cpu* cpu, SDL_Renderer* renderer, std::vector<uint8_t>& mem
 
             ImGui::Separator();
 
+            const char* theme_names[] = { "Light", "Dark (VS Code)" };
+            int theme_idx = (g_theme == EMU_THEME_DARK) ? 1 : 0;
+            if (ImGui::BeginCombo("Theme", theme_names[theme_idx])) {
+                for (int i = 0; i < 2; i++) {
+                    bool selected = (i == theme_idx);
+                    if (ImGui::Selectable(theme_names[i], selected)) {
+                        g_theme = (i == 1) ? EMU_THEME_DARK : EMU_THEME_LIGHT;
+                        emu_apply_theme(g_theme);
+                    }
+                    if (selected) ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+
+            ImGui::Separator();
+
             const char* speed_names[] = {"Adaptive", "Fixed", "Unlimited"};
             if (ImGui::BeginCombo("CPU speed", speed_names[g_cpu_speed_mode])) {
                 for (int i = 0; i < 3; i++) {
@@ -1323,7 +1437,7 @@ void emulator_render(Cpu* cpu, SDL_Renderer* renderer, std::vector<uint8_t>& mem
             ImGui::TextDisabled("%s", hint);
         }
         if (g_load_error[0] != '\0') {
-            ImGui::TextColored(ImVec4(0.8f, 0.1f, 0.1f, 1.0f), "%s", g_load_error);
+            ImGui::TextColored(emu_error_color(), "%s", g_load_error);
         }
         if (ImGui::Button("Load", ImVec2(120, 0))) {
             uint32_t addr = (uint32_t)strtoul(g_load_addr_buf, nullptr, 0);

@@ -68,6 +68,7 @@ typedef struct EmulatorConfig {
     int   display_height;                       // Screen panel height in pixels
     float display_scale;                        // Screen zoom
     int   color_depth;                          // 4 = 16 colors, 8 = 256 colors
+    int   theme;                                // EmuTheme: 0 = light, 1 = dark
     int   speed_mode;                           // CpuSpeedMode
     int   fixed_steps;                          // CPU_SPEED_FIXED steps per frame
     int   max_steps;                            // Max steps per frame
